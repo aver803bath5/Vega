@@ -1,26 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Vega.Models;
 
 namespace Vega.Controllers
 {
     [Route("api/makes")]
     [ApiController]
-    public class MakesControllers
+    public class MakesController
     {
         private readonly VegaDbContext _context;
 
-        public MakesControllers(VegaDbContext context)
+        public MakesController(VegaDbContext context)
         {
             _context = context;
         }
 
         [HttpGet("/api/makes")]
-        public IEnumerable<Make> GetMakes()
+        public async Task<IEnumerable<Make>> GetMakes()
         {
-            var makes = _context.Makes.ToList();
+            var makes = await _context.Makes
+                .Include(m => m.Models)
+                .ToListAsync();
             return makes;
         }
     }
