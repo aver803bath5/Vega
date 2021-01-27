@@ -12,10 +12,5 @@ namespace Vega.Models
         public string Name { get; set; }
 
         public ICollection<Model> Models { get; set; }
-
-        public Make()
-        {
-            Models = new List<Model>();
-        }
     }
 }
