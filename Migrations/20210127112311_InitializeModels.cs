@@ -7,7 +7,7 @@ namespace Vega.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Feature",
+                name: "Features",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -16,11 +16,11 @@ namespace Vega.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feature", x => x.Id);
+                    table.PrimaryKey("PK_Features", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Make",
+                name: "Makes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -29,7 +29,7 @@ namespace Vega.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Make", x => x.Id);
+                    table.PrimaryKey("PK_Makes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,9 +56,9 @@ namespace Vega.Migrations
                 {
                     table.PrimaryKey("PK_MakeModel", x => new { x.MakesId, x.ModelsId });
                     table.ForeignKey(
-                        name: "FK_MakeModel_Make_MakesId",
+                        name: "FK_MakeModel_Makes_MakesId",
                         column: x => x.MakesId,
-                        principalTable: "Make",
+                        principalTable: "Makes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -78,13 +78,13 @@ namespace Vega.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Feature");
+                name: "Features");
 
             migrationBuilder.DropTable(
                 name: "MakeModel");
 
             migrationBuilder.DropTable(
-                name: "Make");
+                name: "Makes");
 
             migrationBuilder.DropTable(
                 name: "Models");

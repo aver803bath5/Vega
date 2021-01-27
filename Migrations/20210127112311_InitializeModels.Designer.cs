@@ -9,7 +9,7 @@ using Vega;
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    [Migration("20210125133306_InitializeModels")]
+    [Migration("20210127112311_InitializeModels")]
     partial class InitializeModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace Vega.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Feature");
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("Vega.Models.Make", b =>
@@ -66,7 +66,7 @@ namespace Vega.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Make");
+                    b.ToTable("Makes");
                 });
 
             modelBuilder.Entity("Vega.Models.Model", b =>
