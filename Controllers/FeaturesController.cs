@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Vega.Models;
+using Vega.Persistence;
 
 namespace Vega.Controllers
 {

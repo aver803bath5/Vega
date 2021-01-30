@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.Dtos;
+using Vega.Controllers.Resources;
 using Vega.Models;
+using Vega.Persistence;
 
 namespace Vega.Controllers
 {
@@ -23,13 +24,12 @@ namespace Vega.Controllers
         }
 
         [HttpGet("/api/makes")]
-        public async Task<IEnumerable<MakeDto>> GetMakes()
+        public async Task<IEnumerable<MakeResource>> GetMakes()
         {
             var makes = await _context.Makes
                 .Include(m => m.Models)
                 .ToListAsync();
-            var makesDto = makes.Select(_mapper.Map<Make, MakeDto>);
-            return makesDto;
+            return _mapper.Map<List<Make>, List<MakeResource>>(makes);
         }
     }
 }
