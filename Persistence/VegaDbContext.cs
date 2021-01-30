@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Vega.EntityConfigurations;
 using Vega.Models;
 
-namespace Vega
+namespace Vega.Persistence
 {
     public class VegaDbContext : DbContext
     {

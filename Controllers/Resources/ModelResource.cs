@@ -1,6 +1,6 @@
-namespace Vega.Dtos
+namespace Vega.Controllers.Resources
 {
-    public class ModelDto
+    public class ModelResource
     {
         public int Id { get; set; }
 

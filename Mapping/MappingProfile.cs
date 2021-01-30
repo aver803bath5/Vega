@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using Vega.Dtos;
+using Vega.Controllers.Resources;
 using Vega.Models;
 
-namespace Vega.AutoMapperProfiles
+namespace Vega.Mapping
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<Make, MakeDto>();
-            CreateMap<Model, ModelDto>();
+            CreateMap<Make, MakeResource>();
+            CreateMap<Model, ModelResource>();
         }
     }
 }
