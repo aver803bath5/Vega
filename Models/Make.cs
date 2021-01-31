@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Vega.Models
 {
@@ -12,5 +9,10 @@ namespace Vega.Models
         public string Name { get; set; }
 
         public ICollection<Model> Models { get; set; }
+
+        public Make()
+        {
+            Models = new List<Model>();
+        }
     }
 }
