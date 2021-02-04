@@ -1,0 +1,66 @@
+<h2>
+  {{ form.value.id == 0 ? "Create Vehicle" : "Edit Vehicle" }}
+</h2>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <div class="form-group">
+    <label for="make">
+      Select Make
+      <select id="make" class="form-control" (change)="onMakeSelect()" formControlName="make">
+        <option value="0" disabled>Select Make</option>
+        <option [value]="make.id" *ngFor="let make of makes">
+          {{ make.name }}
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label for="model">
+      Select Model
+      <select class="form-control" id="model" formControlName="model">
+        <option value="0" disabled>Select model</option>
+        <option [value]="model.id" *ngFor="let model of models">
+          {{ model.name }}
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <div class="form-check">
+    <input class="form-check-input" id="isRegistered" type="radio" name="isRegistered" formControlName="isRegistered"
+           [value]="true">
+    <label class="form-check-label" for="isRegistered">Yes</label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" id="isNotRegistered" type="radio" name="isRegistered" formControlName="isRegistered"
+           [value]="false">
+    <label class="form-check-label" for="isNotRegistered">No</label>
+  </div>
+
+  <div class="form-check form-check-inline" *ngFor="let feature of featuresFormArray.controls; let i = index">
+    <label class="form-check-label" for="feature{{i}}" formArrayName="features">
+      <input class="form-check-input" id="feature{{i}}" type="checkbox" [formControlName]="i.toString()">
+      {{features[i].name}}
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label for="contactName">Name</label>
+    <input type="text" id="contactName" class="form-control" formControlName="contactName">
+  </div>
+
+  <div class="form-group">
+    <label for="contactPhone">Phone</label>
+    <input type="text" class="form-control" id="contactPhone" formControlName="contactPhone">
+  </div>
+
+  <div class="form-group">
+    <label for="contactEmail">Email</label>
+    <input type="text" class="form-control" id="contactEmail" formControlName="contactEmail">
+  </div>
+
+  <div>
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Submit</button>
+  </div>
+</form>
