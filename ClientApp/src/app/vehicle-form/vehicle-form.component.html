@@ -6,7 +6,7 @@
   <div class="form-group">
     <label for="make">
       Select Make
-      <select id="make" class="form-control" (change)="onMakeSelect($event)" formControlName="make">
+      <select id="make" class="form-control" (change)="onMakeSelect()" formControlName="make">
         <option value="0" disabled>Select Make</option>
         <option [value]="make.id" *ngFor="let make of makes">
           {{ make.name }}
@@ -39,8 +39,8 @@
   </div>
 
   <div class="form-check form-check-inline" *ngFor="let feature of featuresFormArray.controls; let i = index">
-    <label class="form-check-label" formArrayName="features">
-      <input class="form-check-input" type="checkbox" [formControlName]="i.toString()">
+    <label class="form-check-label" for="feature{{i}}" formArrayName="features">
+      <input class="form-check-input" id="feature{{i}}" type="checkbox" [formControlName]="i.toString()">
       {{features[i].name}}
     </label>
   </div>
@@ -57,7 +57,7 @@
 
   <div class="form-group">
     <label for="contactEmail">Email</label>
-    <input type="text" class="form-control" id="contactEmail" formControlName="contactPhone">
+    <input type="text" class="form-control" id="contactEmail" formControlName="contactEmail">
   </div>
 
   <div>
