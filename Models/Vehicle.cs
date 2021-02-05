@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Vega.Models
 {
@@ -10,7 +11,7 @@ namespace Vega.Models
         public Model Model { get; set; }
         public int ModelId { get; set; }
 
-        public ICollection<Feature> Features { get; set; }
+        public ICollection<VehicleFeatures> Features { get; set; }
 
         public string ContactName { get; set; }
 
@@ -24,7 +25,7 @@ namespace Vega.Models
 
         public Vehicle()
         {
-            Features = new List<Feature>();
+            Features = new Collection<VehicleFeatures>();
         }
     }
 }
