@@ -11,7 +11,7 @@ namespace Vega.Models
         public Model Model { get; set; }
         public int ModelId { get; set; }
 
-        public ICollection<VehicleFeatures> Features { get; set; }
+        public ICollection<VehicleFeature> Features { get; set; }
 
         public string ContactName { get; set; }
 
@@ -25,7 +25,7 @@ namespace Vega.Models
 
         public Vehicle()
         {
-            Features = new Collection<VehicleFeatures>();
+            Features = new Collection<VehicleFeature>();
         }
     }
 }

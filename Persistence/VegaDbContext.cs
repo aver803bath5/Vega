@@ -22,8 +22,9 @@ namespace Vega.Persistence
             modelBuilder.ApplyConfiguration(new MakeConfiguration());
             modelBuilder.ApplyConfiguration(new FeatureConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleConfiguration());
+            modelBuilder.ApplyConfiguration(new VehicleFeatureConfiguration());
 
-            modelBuilder.Entity<VehicleFeatures>().HasKey(vf => new {vf.VehicleId, vf.FeatureId});
+            modelBuilder.Entity<VehicleFeature>().HasKey(vf => new {vf.VehicleId, vf.FeatureId});
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace Vega.Models
 {
-    public class VehicleFeatures
+    public class VehicleFeature
     {
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }

@@ -9,11 +9,11 @@ namespace Vega.Models
 
         public string Name { get; set; }
 
-        public ICollection<VehicleFeatures> Vehicles { get; set; }
+        public ICollection<VehicleFeature> Vehicles { get; set; }
 
         public Feature()
         {
-            Vehicles = new Collection<VehicleFeatures>();
+            Vehicles = new Collection<VehicleFeature>();
         }
     }
 }
