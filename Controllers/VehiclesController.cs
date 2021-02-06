@@ -77,6 +77,19 @@ namespace Vega.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("/api/vehicles/{id}")]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            var vehicle = await _context.Vehicles.FindAsync(id);
+            if (vehicle == null)
+                return NotFound();
+            
+            _context.Vehicles.Remove(vehicle);
+            await _context.SaveChangesAsync();
+            
+            return Ok();
+        }
+
         [HttpPut("/api/vehicles")]
         public async Task<IActionResult> UpdateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
