@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,21 @@ namespace Vega.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("/api/vehicles")]
+        public async Task<IActionResult> GetVehicles()
+        {
+            var vehicles = await _context.Vehicles
+                .Include(v => v.Features)
+                .ThenInclude(f => f.Feature)
+                .Include(v => v.Model)
+                .ThenInclude(m => m.Make)
+                .ToListAsync();
+
+            var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
+            
+            return Ok(result);
+        }
+
         [HttpPost("/api/vehicles")]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
@@ -31,13 +47,33 @@ namespace Vega.Controllers
             await _context.Vehicles.AddAsync(vehicle);
             await _context.SaveChangesAsync();
 
-            var result = await _context.Vehicles
+            var addedVehicle = await _context.Vehicles
                 .Include(v => v.Features)
                 .ThenInclude(f => f.Feature)
                 .Include(v => v.Model)
                 .ThenInclude(m => m.Make)
-                .FirstAsync(v => v.Id == vehicle.Id);
-            return Ok(_mapper.Map<Vehicle, VehicleResource>(result));
+                .FirstOrDefaultAsync(v => v.Id == vehicle.Id);
+            
+            var result = _mapper.Map<Vehicle, VehicleResource>(addedVehicle);
+            return Ok(result);
+        }
+
+        [HttpPut("/api/vehicles")]
+        public async Task<IActionResult> UpdateVehicle([FromBody] SaveVehicleResource vehicleResource)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            var vehicle = await _context.Vehicles
+                .Include(v => v.Features)
+                .FirstOrDefaultAsync(v => v.Id == vehicleResource.Id);
+            if (vehicle == null)
+                return NotFound();
+            
+            _mapper.Map(vehicleResource, vehicle);
+            await _context.SaveChangesAsync();
+            
+            return Ok();
         }
     }
 }
