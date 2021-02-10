@@ -91,22 +91,23 @@ namespace Vega.Controllers
             return Ok(id);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateVehicle([FromBody] SaveVehicleResource vehicleResource)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             
             var vehicle = await _context.Vehicles
                 .Include(v => v.Features)
-                .SingleOrDefaultAsync(v => v.Id == vehicleResource.Id);
+                .SingleOrDefaultAsync(v => v.Id == id);
             if (vehicle == null)
                 return NotFound();
             
             _mapper.Map(vehicleResource, vehicle);
             await _context.SaveChangesAsync();
-            
-            return Ok();
+
+            var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
+            return Ok(result);
         }
     }
 }
