@@ -40,7 +40,7 @@ namespace Vega.Controllers
         public async Task<IActionResult> GetVehicle(int id)
         {
             var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(v => v.Id == id);
+                .SingleOrDefaultAsync(v => v.Id == id);
             if (vehicle == null)
                 return NotFound();
             
@@ -98,7 +98,7 @@ namespace Vega.Controllers
             
             var vehicle = await _context.Vehicles
                 .Include(v => v.Features)
-                .FirstOrDefaultAsync(v => v.Id == vehicleResource.Id);
+                .SingleOrDefaultAsync(v => v.Id == vehicleResource.Id);
             if (vehicle == null)
                 return NotFound();
             
