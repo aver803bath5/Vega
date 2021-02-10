@@ -10,6 +10,7 @@ using Vega.Persistence;
 
 namespace Vega.Controllers
 {
+    [Route("/api/vehicles")]
     public class VehiclesController : Controller
     {
         private readonly VegaDbContext _context;
@@ -21,7 +22,7 @@ namespace Vega.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("/api/vehicles")]
+        [HttpGet]
         public async Task<IActionResult> GetVehicles()
         {
             var vehicles = await _context.Vehicles
@@ -36,7 +37,7 @@ namespace Vega.Controllers
             return Ok(result);
         }
         
-        [HttpGet("/api/vehicles/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
             var vehicle = await _context.Vehicles
@@ -55,7 +56,7 @@ namespace Vega.Controllers
             return Ok(result);
         }
 
-        [HttpPost("/api/vehicles")]
+        [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
@@ -77,7 +78,7 @@ namespace Vega.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("/api/vehicles/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);
@@ -87,10 +88,10 @@ namespace Vega.Controllers
             _context.Vehicles.Remove(vehicle);
             await _context.SaveChangesAsync();
             
-            return Ok();
+            return Ok(id);
         }
 
-        [HttpPut("/api/vehicles")]
+        [HttpPut]
         public async Task<IActionResult> UpdateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
