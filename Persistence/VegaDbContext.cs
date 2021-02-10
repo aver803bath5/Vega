@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Vega.EntityConfigurations;
 using Vega.Models;
+using Vega.Persistence.EntityConfigurations;
 
 namespace Vega.Persistence
 {
