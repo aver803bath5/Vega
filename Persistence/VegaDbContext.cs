@@ -9,11 +9,11 @@ namespace Vega.Persistence
         public DbSet<Model> Models { get; set; }
         public DbSet<Make> Makes { get; set; }
         public DbSet<Feature> Features { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
 
         public VegaDbContext(DbContextOptions<VegaDbContext> options)
             : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +21,8 @@ namespace Vega.Persistence
             modelBuilder.ApplyConfiguration(new ModelConfiguration());
             modelBuilder.ApplyConfiguration(new MakeConfiguration());
             modelBuilder.ApplyConfiguration(new FeatureConfiguration());
+            modelBuilder.ApplyConfiguration(new VehicleConfiguration());
+            modelBuilder.ApplyConfiguration(new VehicleFeatureConfiguration());
         }
     }
 }

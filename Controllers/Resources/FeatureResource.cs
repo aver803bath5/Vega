@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Vega.Controllers.Resources
 {
-    public class MakeResource
+    public class FeatureResource
     {
         public int Id { get; set; }
 
