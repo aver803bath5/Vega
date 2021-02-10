@@ -11,12 +11,7 @@ namespace Vega.Controllers.Resources
 
         public int ModelId { get; set; }
 
-        [Required]
-        public string ContactName { get; set; }
-
-        public string ContactPhone { get; set; }
-
-        public string ContactEmail { get; set; }
+        [Required] public ContactResource Contact { get; set; }
 
         public bool IsRegistered { get; set; }
 

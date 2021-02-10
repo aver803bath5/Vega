@@ -9,16 +9,20 @@ namespace Vega.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.Property(v => v.ContactName)
-                .IsRequired()
-                .HasMaxLength(255);
-            
-            builder.Property(v => v.ContactPhone)
-                .IsRequired()
-                .HasMaxLength(255);
+            builder.OwnsOne(v => v.Contact, nb =>
+            {
+                nb.Property(c => c.Email).HasColumnName("ContactEmail")
+                    .HasMaxLength(255);
 
-            builder.Property(v => v.ContactEmail)
-                .HasMaxLength(255);
+                nb.Property(c => c.Name).HasColumnName("ContactName")
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                nb.Property(c => c.Phone).HasColumnName("ContactPhone")
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
+            builder.Navigation(v => v.Contact).IsRequired();
         }
     }
 }

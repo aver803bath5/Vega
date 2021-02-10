@@ -13,11 +13,7 @@ namespace Vega.Models
 
         public ICollection<VehicleFeature> Features { get; set; }
 
-        public string ContactName { get; set; }
-
-        public string ContactPhone { get; set; }
-
-        public string ContactEmail { get; set; }
+        public Contact Contact { get; set; }
 
         public bool IsRegistered { get; set; }
 
