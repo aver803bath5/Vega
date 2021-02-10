@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Vega.Controllers.Resources;
-using Vega.Models;
+using Vega.Core.Domain;
 
 namespace Vega.Mapping
 {

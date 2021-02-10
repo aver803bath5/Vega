@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Vega.Models
+namespace Vega.Core.Domain
 {
     public class Feature
     {
