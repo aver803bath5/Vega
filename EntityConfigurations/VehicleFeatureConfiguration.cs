@@ -9,6 +9,8 @@ namespace Vega.EntityConfigurations
         public void Configure(EntityTypeBuilder<VehicleFeature> builder)
         {
             builder.ToTable("VehicleFeatures");
+
+            builder.HasKey(vf => new {vf.VehicleId, vf.FeatureId});
         }
     }
 }
