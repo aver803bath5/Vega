@@ -9,6 +9,7 @@ namespace Vega.Core
     {
         IFeatureRepository Features { get; }
         IMakeRepository Makes { get; }
+        IVehicleRepository Vehicles { get; }
         int Complete();
         Task<int> CompleteAsync();
     }
