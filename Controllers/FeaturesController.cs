@@ -1,28 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using Vega.Controllers.Resources;
+using Vega.Core;
 using Vega.Core.Domain;
-using Vega.Persistence;
 
 namespace Vega.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("/api/[controller]")]
     public class FeaturesController : ControllerBase
     {
-        private readonly VegaDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public FeaturesController(VegaDbContext context)
+        public FeaturesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        [HttpGet("/api/features")]
-        public async Task<IEnumerable<Feature>> GetFeatures()
+        [HttpGet]
+        public async Task<IActionResult> GetFeatures()
         {
-            var features = await _context.Features.ToListAsync();
-            return features;
+            var features = await _unitOfWork.Features.GetAllAsync();
+            var result = features.Select(_mapper.Map<Feature, FeatureResource>);
+            return Ok(result);
         }
     }
 }
