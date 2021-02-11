@@ -14,7 +14,6 @@ namespace Vega.Core.Repositories
         Task<IEnumerable<TEntity>> GetAllAsync();
         
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
