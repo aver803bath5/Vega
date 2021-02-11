@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using Vega.Controllers.Resources;
 using Vega.Core.Domain;
@@ -22,6 +21,7 @@ namespace Vega.Mapping
                         v.Features.Select(vf => new FeatureResource {Id = vf.FeatureId, Name = vf.Feature.Name})));
             
             // Resource to domain model
+            CreateMap<ContactResource, Contact>();
             CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.Features, opt => opt.Ignore())
