@@ -14,9 +14,11 @@ namespace Vega.Persistence
         {
             _context = context;
             Features = new FeatureRepository(_context);
+            Makes = new MakeRepository(_context);
         }
 
         public IFeatureRepository Features { get; private set; }
+        public IMakeRepository Makes { get; private set; }
 
         public int Complete()
         {

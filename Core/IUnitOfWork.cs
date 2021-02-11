@@ -8,6 +8,7 @@ namespace Vega.Core
     public interface IUnitOfWork : IDisposable
     {
         IFeatureRepository Features { get; }
+        IMakeRepository Makes { get; }
         int Complete();
         Task<int> CompleteAsync();
     }
