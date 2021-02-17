@@ -25,7 +25,7 @@ namespace Vega.Controllers
         public async Task<IActionResult> GetFeatures()
         {
             var features = await _unitOfWork.Features.GetAllAsync();
-            var result = features.Select(_mapper.Map<Feature, FeatureResource>);
+            var result = features.Select(_mapper.Map<Feature, KeyValuePairResource>);
             return Ok(result);
         }
     }
