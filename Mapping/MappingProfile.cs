@@ -18,7 +18,7 @@ namespace Vega.Mapping
                 .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make))
                 .ForMember(vr => vr.Features,
                     opt => opt.MapFrom(v =>
-                        v.Features.Select(vf => new FeatureResource {Id = vf.FeatureId, Name = vf.Feature.Name})));
+                        v.Features.Select(vf => new KeyValuePairResource() {Id = vf.FeatureId, Name = vf.Feature.Name})));
             
             // Resource to domain model
             CreateMap<ContactResource, Contact>();

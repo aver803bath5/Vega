@@ -12,7 +12,7 @@ namespace Vega.Controllers.Resources
 
         public MakeResource Make { get; set; }
 
-        public ICollection<FeatureResource> Features { get; set; }
+        public ICollection<KeyValuePairResource> Features { get; set; }
 
         [Required] public ContactResource Contact { get; set; }
 
@@ -20,7 +20,7 @@ namespace Vega.Controllers.Resources
 
         public VehicleResource()
         {
-            Features = new Collection<FeatureResource>();
+            Features = new Collection<KeyValuePairResource>();
         }
     }
 }
