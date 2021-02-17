@@ -3,11 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
-using Vega.Persistence;
 
 namespace Vega.Controllers
 {
@@ -27,7 +25,7 @@ namespace Vega.Controllers
         [HttpGet]
         public async Task<IEnumerable<MakeResource>> GetMakes()
         {
-            var makes = await _unitOfWork.Makes.GetAllAsync();
+            var makes = await _unitOfWork.Makes.GetMakesWithModelAsync();
             return _mapper.Map<List<Make>, List<MakeResource>>(makes.ToList());
         }
     }
