@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Vega.Models
+namespace Vega.Core.Domain
 {
     public class Make
     {

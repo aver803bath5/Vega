@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vega.Models;
+using Vega.Core.Domain;
 
-namespace Vega.EntityConfigurations
+namespace Vega.Persistence.EntityConfigurations
 {
     public class FeatureConfiguration : IEntityTypeConfiguration<Feature>
     {

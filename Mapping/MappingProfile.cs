@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using Vega.Controllers.Resources;
-using Vega.Models;
+using Vega.Core.Domain;
 
 namespace Vega.Mapping
 {
@@ -12,8 +11,8 @@ namespace Vega.Mapping
         {
             // Domain model to resource
             CreateMap<Make, MakeResource>();
-            CreateMap<Model, ModelResource>();
-            CreateMap<Feature, FeatureResource>();
+            CreateMap<Model, KeyValuePairResource>();
+            CreateMap<Feature, KeyValuePairResource>();
             CreateMap<Contact, ContactResource>();
             CreateMap<Vehicle, VehicleResource>()
                 .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make))
@@ -22,6 +21,7 @@ namespace Vega.Mapping
                         v.Features.Select(vf => new FeatureResource {Id = vf.FeatureId, Name = vf.Feature.Name})));
             
             // Resource to domain model
+            CreateMap<ContactResource, Contact>();
             CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.Features, opt => opt.Ignore())

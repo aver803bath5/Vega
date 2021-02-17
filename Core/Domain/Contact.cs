@@ -1,4 +1,4 @@
-namespace Vega.Models
+namespace Vega.Core.Domain
 {
     public class Contact
     {
