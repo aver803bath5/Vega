@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, ValidatorFn, Validators} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
 
-import {VehicleFormService} from "../vehicle-form.service";
-import {IMake} from "../../core/models/IMake";
-import {IModel} from "../../core/models/IModel";
-import {IFeature} from "../../core/models/IFeature";
+import { VehicleFormService } from "../vehicle-form.service";
+import { IMake } from "../models/IMake";
+import { IModel } from "../models/IModel";
+import { IFeature } from "../models/IFeature";
 
 @Component({
   selector: 'app-vehicle-form',

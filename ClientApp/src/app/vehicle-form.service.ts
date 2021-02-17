@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import {IMake} from "../core/models/IMake";
-import {IFeature} from "../core/models/IFeature";
+import { IMake } from "./models/IMake";
+import { IFeature } from "./models/IFeature";
 
 @Injectable({
   providedIn: 'root',
