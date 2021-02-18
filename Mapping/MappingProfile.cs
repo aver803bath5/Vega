@@ -11,6 +11,7 @@ namespace Vega.Mapping
         {
             // Domain model to resource
             CreateMap<Make, MakeResource>();
+            CreateMap<Make, KeyValuePairResource>();
             CreateMap<Model, KeyValuePairResource>();
             CreateMap<Feature, KeyValuePairResource>();
             CreateMap<Contact, ContactResource>();
