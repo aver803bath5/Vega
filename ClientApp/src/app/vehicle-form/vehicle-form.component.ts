@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+
+import * as _ from "underscore";
+import { forkJoin, Observable } from "rxjs";
 
 import { VehicleFormService } from "../vehicle-form.service";
 import { IMake } from "../models/IMake";
 import { IKeyValuePair } from "../models/IKeyValuePair";
 import { ISaveVehicle } from "../models/ISaveVehicle";
+import { IVehicle } from "../models/IVehicle";
 
 @Component({
   selector: 'app-vehicle-form',
@@ -33,28 +38,64 @@ export class VehicleFormComponent implements OnInit {
   }
 
   constructor(
-    private vehicleFormService: VehicleFormService
+    private vehicleFormService: VehicleFormService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
   }
 
   ngOnInit() {
-    this.vehicleFormService.getMakes().subscribe(makes => {
-      this.makes = makes;
-    });
+    const vehicleId = +this.route.snapshot.paramMap.get('id');
+    const sources: Array<Observable<any>> = [
+      this.vehicleFormService.getFeatures(),
+      this.vehicleFormService.getMakes()
+    ];
+    if (vehicleId)
+      sources.push(this.vehicleFormService.getVehicle(vehicleId));
 
-    this.vehicleFormService.getFeatures().subscribe(features => {
-      this.features = features;
-      features.forEach(() => this.featuresFormArray.push(new FormControl(false)));
+    forkJoin(sources).subscribe((data: [Array<IKeyValuePair>, Array<IMake>, IVehicle]) => {
+      this.features = [...data[0]];
+      this.makes = [...data[1]];
+
+      if (vehicleId) {
+        this.generateFeaturesFormArray(data[2].features);
+        this.setVehicle(data[2]);
+      }
+      this.populateModels();
+    }, error => {
+      if (error.status === 404)
+        this.router.navigate(['/']);
+    });
+  }
+
+  private setVehicle(v: IVehicle) {
+    this.form.patchValue({
+      id: v.id,
+      makeId: v.make.id,
+      modelId: v.model.id,
+      isRegistered: v.isRegistered,
+      contact: v.contact
+    });
+  }
+
+  private generateFeaturesFormArray(vehicleFeatures: Array<IKeyValuePair>) {
+    const vehicleFeatureIds = _.pluck(vehicleFeatures, 'id');
+    this.features.forEach(f => {
+      this.featuresFormArray.push(new FormControl(vehicleFeatureIds.includes(f.id)));
     });
   }
 
   onMakeSelect() {
-    const makeId = this.form.controls.makeId.value;
     this.form.patchValue({
       modelId: 0
     });
+    this.populateModels();
+  }
 
-    this.models = this.makes.find(m => m.id == makeId).models;
+  private populateModels() {
+    const selectedMake = this.form.value.makeId;
+    console.log(selectedMake);
+    this.models = selectedMake ? this.makes.find(m => m.id == selectedMake).models : [];
   }
 
   onSubmit() {
@@ -62,8 +103,15 @@ export class VehicleFormComponent implements OnInit {
       .map((checked: boolean, i) => checked ? this.features[i].id : -1)
       .filter((v: number) => v !== -1);
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
-    this.vehicleFormService.createVehicle(saveVehicle).subscribe(x => {
-      console.log(x);
-    });
+
+    if (this.form.controls.id.value) {
+      this.vehicleFormService.update(saveVehicle).subscribe(x => {
+        console.log(x);
+      });
+    } else {
+      this.vehicleFormService.create(saveVehicle).subscribe(x => {
+        console.log(x);
+      });
+    }
   }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Vega.Controllers.Resources;
 using Vega.Core.Domain;
@@ -30,11 +31,12 @@ namespace Vega.Mapping
                 {
                     // Remove features
                     var removedFeatures = v.Features
-                        .Where(vf => !vr.Features.Contains(vf.FeatureId));
-                    foreach (var removedFeature in removedFeatures) 
-                        v.Features.Remove(removedFeature);
+                        .Where(vf => !vr.Features.Contains(vf.FeatureId))
+                        .ToList();
+                    foreach (var f in removedFeatures)
+                        v.Features.Remove(f);
 
-                    // Add features
+                    // // Add features
                     var addedFeatures = vr.Features
                         // Determine if vehicle features in VehicleFeatures table has same Feature Ids of features in VehicleResource.
                         .Where(id => v.Features.All(vf => vf.FeatureId != id))
