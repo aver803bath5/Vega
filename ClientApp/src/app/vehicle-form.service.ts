@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { IMake } from "./models/IMake";
 import { IFeature } from "./models/IFeature";
+import { ISaveVehicle } from "./models/ISaveVehicle";
 
 @Injectable({
   providedIn: 'root',
@@ -16,5 +17,9 @@ export class VehicleFormService {
 
   getFeatures() {
     return this.http.get<Array<IFeature>>('/api/features');
+  }
+
+  createVehicle(saveVehicle: ISaveVehicle) {
+    return this.http.post('/api/vehicles', saveVehicle);
   }
 }

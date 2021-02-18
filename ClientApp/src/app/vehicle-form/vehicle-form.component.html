@@ -6,8 +6,8 @@
   <div class="form-group">
     <label for="make">
       Select Make
-      <select id="make" class="form-control" (change)="onMakeSelect()" formControlName="make">
-        <option value="0" disabled>Select Make</option>
+      <select id="make" class="form-control" (change)="onMakeSelect()" formControlName="makeId">
+        <option [value]="0" disabled>Select Make</option>
         <option [value]="make.id" *ngFor="let make of makes">
           {{ make.name }}
         </option>
@@ -18,7 +18,7 @@
   <div class="form-group">
     <label for="model">
       Select Model
-      <select class="form-control" id="model" formControlName="model">
+      <select class="form-control" id="model" formControlName="modelId">
         <option value="0" disabled>Select model</option>
         <option [value]="model.id" *ngFor="let model of models">
           {{ model.name }}
@@ -45,19 +45,21 @@
     </label>
   </div>
 
-  <div class="form-group">
-    <label for="contactName">Name</label>
-    <input type="text" id="contactName" class="form-control" formControlName="contactName">
-  </div>
+  <div formGroupName="contact">
+    <div class="form-group">
+      <label for="contactName">Name</label>
+      <input type="text" id="contactName" class="form-control" formControlName="name">
+    </div>
 
-  <div class="form-group">
-    <label for="contactPhone">Phone</label>
-    <input type="text" class="form-control" id="contactPhone" formControlName="contactPhone">
-  </div>
+    <div class="form-group">
+      <label for="contactPhone">Phone</label>
+      <input type="text" class="form-control" id="contactPhone" formControlName="phone">
+    </div>
 
-  <div class="form-group">
-    <label for="contactEmail">Email</label>
-    <input type="text" class="form-control" id="contactEmail" formControlName="contactEmail">
+    <div class="form-group">
+      <label for="contactEmail">Email</label>
+      <input type="text" class="form-control" id="contactEmail" formControlName="email">
+    </div>
   </div>
 
   <div>

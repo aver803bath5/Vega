@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, ValidatorFn, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, Validators } from "@angular/forms";
 
 import { VehicleFormService } from "../vehicle-form.service";
 import { IMake } from "../models/IMake";
 import { IModel } from "../models/IModel";
 import { IFeature } from "../models/IFeature";
+import { ISaveVehicle } from "../models/ISaveVehicle";
 
 @Component({
   selector: 'app-vehicle-form',
@@ -14,13 +15,15 @@ import { IFeature } from "../models/IFeature";
 export class VehicleFormComponent implements OnInit {
   form = new FormBuilder().group({
     id: 0,
-    make: [0, Validators.min(1)],
-    model: [0, Validators.min(1)],
+    makeId: [0, Validators.min(1)],
+    modelId: [0, Validators.min(1)],
     features: new FormArray([]),
     isRegistered: false,
-    contactName: ["", [Validators.maxLength(255), Validators.required]],
-    contactPhone: ["", [Validators.maxLength(255), Validators.required]],
-    contactEmail: ["", [Validators.email, Validators.maxLength(255), Validators.required]],
+    contact: new FormBuilder().group({
+      name: ["", [Validators.maxLength(255), Validators.required]],
+      phone: ["", [Validators.maxLength(255), Validators.required]],
+      email: ["", [Validators.email, Validators.maxLength(255)]],
+    })
   });
   makes = new Array<IMake>();
   models = new Array<IModel>();
@@ -47,9 +50,9 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onMakeSelect() {
-    const makeId = this.form.controls.make.value;
+    const makeId = this.form.controls.makeId.value;
     this.form.patchValue({
-      model: 0
+      modelId: 0
     });
 
     this.models = this.makes.find(m => m.id == makeId).models;
@@ -57,10 +60,11 @@ export class VehicleFormComponent implements OnInit {
 
   onSubmit() {
     const selectedFeatureIds = this.form.value.features
-      .map((checked, i) => checked ? this.features[i].id : checked)
-      .filter(v => v !== false);
-
-
-    console.log(this.form.value);
+      .map((checked: boolean, i) => checked ? this.features[i].id : -1)
+      .filter((v: number) => v !== -1);
+    const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
+    this.vehicleFormService.createVehicle(saveVehicle).subscribe(x => {
+      console.log(x);
+    });
   }
 }
