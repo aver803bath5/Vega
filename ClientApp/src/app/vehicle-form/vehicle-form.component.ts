@@ -3,8 +3,7 @@ import { FormArray, FormBuilder, FormControl, Validators } from "@angular/forms"
 
 import { VehicleFormService } from "../vehicle-form.service";
 import { IMake } from "../models/IMake";
-import { IModel } from "../models/IModel";
-import { IFeature } from "../models/IFeature";
+import { IKeyValuePair } from "../models/IKeyValuePair";
 import { ISaveVehicle } from "../models/ISaveVehicle";
 
 @Component({
@@ -26,8 +25,8 @@ export class VehicleFormComponent implements OnInit {
     })
   });
   makes = new Array<IMake>();
-  models = new Array<IModel>();
-  features = new Array<IFeature>();
+  models = new Array<IKeyValuePair>();
+  features = new Array<IKeyValuePair>();
 
   get featuresFormArray() {
     return this.form.controls.features as FormArray;
