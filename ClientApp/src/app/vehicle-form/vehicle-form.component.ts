@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import * as _ from "underscore";
 import { forkJoin, Observable } from "rxjs";
+import { ToastrService } from "ngx-toastr";
 
 import { VehicleFormService } from "../vehicle-form.service";
 import { IMake } from "../models/IMake";
@@ -40,7 +41,8 @@ export class VehicleFormComponent implements OnInit {
   constructor(
     private vehicleFormService: VehicleFormService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
   }
 
@@ -105,12 +107,12 @@ export class VehicleFormComponent implements OnInit {
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
 
     if (this.form.controls.id.value) {
-      this.vehicleFormService.update(saveVehicle).subscribe(x => {
-        console.log(x);
+      this.vehicleFormService.update(saveVehicle).subscribe(() => {
+        this.toastr.success('Vehicle has been created', 'Success');
       });
     } else {
-      this.vehicleFormService.create(saveVehicle).subscribe(x => {
-        console.log(x);
+      this.vehicleFormService.create(saveVehicle).subscribe(() => {
+        this.toastr.success('Vehicle has been udpated', 'Success');
       });
     }
   }
