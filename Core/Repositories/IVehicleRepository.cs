@@ -8,5 +8,6 @@ namespace Vega.Core.Repositories
     {
         Task<IEnumerable<Vehicle>> GetAllVehiclesWithInfoAsync();
         Task<Vehicle> GetVehicleWithInfoAsync(int id);
+        Task<IEnumerable<Vehicle>> FilterWithMakeAsync(int makeId);
     }
 }

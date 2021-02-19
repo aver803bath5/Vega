@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -23,12 +24,18 @@ namespace Vega.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicles()
+        public async Task<IActionResult> GetVehicles([FromQuery] int makeId)
         {
-            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
-            var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
+            if (makeId == 0)
+            {
+                var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
+                var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
 
-            return Ok(result);
+                return Ok(result);
+            }
+
+            var filteredVehicles = await _unitOfWork.Vehicles.FilterWithMakeAsync(makeId);
+            return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(filteredVehicles));
         }
 
         [HttpGet("{id}")]
