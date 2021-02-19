@@ -6,11 +6,11 @@ import * as _ from "underscore";
 import { forkJoin, Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
-import { VehicleFormService } from "../vehicle-form.service";
 import { IMake } from "../models/IMake";
 import { IKeyValuePair } from "../models/IKeyValuePair";
 import { ISaveVehicle } from "../models/ISaveVehicle";
 import { IVehicle } from "../models/IVehicle";
+import { VehicleService } from "../vehicle.service";
 
 @Component({
   selector: 'app-vehicle-form',
@@ -39,7 +39,7 @@ export class VehicleFormComponent implements OnInit {
   }
 
   constructor(
-    private vehicleFormService: VehicleFormService,
+    private vehicleService: VehicleService,
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService
@@ -49,11 +49,11 @@ export class VehicleFormComponent implements OnInit {
   ngOnInit() {
     const vehicleId = +this.route.snapshot.paramMap.get('id');
     const sources: Array<Observable<any>> = [
-      this.vehicleFormService.getFeatures(),
-      this.vehicleFormService.getMakes()
+      this.vehicleService.getFeatures(),
+      this.vehicleService.getMakes()
     ];
     if (vehicleId)
-      sources.push(this.vehicleFormService.getVehicle(vehicleId));
+      sources.push(this.vehicleService.getVehicle(vehicleId));
 
     forkJoin(sources).subscribe((data: [Array<IKeyValuePair>, Array<IMake>, IVehicle]) => {
       this.features = [...data[0]];
@@ -107,11 +107,11 @@ export class VehicleFormComponent implements OnInit {
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
 
     if (this.form.controls.id.value) {
-      this.vehicleFormService.update(saveVehicle).subscribe(() => {
+      this.vehicleService.update(saveVehicle).subscribe(() => {
         this.toastr.success('Vehicle has been created', 'Success');
       });
     } else {
-      this.vehicleFormService.create(saveVehicle).subscribe(() => {
+      this.vehicleService.create(saveVehicle).subscribe(() => {
         this.toastr.success('Vehicle has been udpated', 'Success');
       });
     }

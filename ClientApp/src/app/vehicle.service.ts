@@ -8,7 +8,7 @@ import { IVehicle } from "./models/IVehicle";
 @Injectable({
   providedIn: 'root',
 })
-export class VehicleFormService {
+export class VehicleService {
 
   constructor(private http: HttpClient) { }
 
