@@ -1,4 +1,4 @@
-export interface IFeature {
+export interface IKeyValuePair {
     id: Number,
     name: String,
 }

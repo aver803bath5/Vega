@@ -1,8 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
+import { ToastrModule } from "ngx-toastr";
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -10,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
+import { AppErrorHandler } from "./app.error-handler";
 
 @NgModule({
   declarations: [
@@ -21,17 +25,26 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
     VehicleFormComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     HttpClientModule,
     RouterModule.forRoot([
-      {path: '', component: HomeComponent, pathMatch: 'full'},
-      {path: 'counter', component: CounterComponent},
-      {path: 'fetch-data', component: FetchDataComponent},
-      {path: 'vehicles/new', component: VehicleFormComponent},
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'counter', component: CounterComponent },
+      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'vehicles/new', component: VehicleFormComponent },
+      { path: 'vehicles/:id', component: VehicleFormComponent }
     ]),
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: AppErrorHandler
+    },
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
