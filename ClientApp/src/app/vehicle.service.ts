@@ -24,6 +24,10 @@ export class VehicleService {
     return this.http.get<IVehicle>(`/api/vehicles/${id}`);
   }
 
+  getVehicles() {
+    return this.http.get<Array<IVehicle>>('/api/vehicles');
+  }
+
   create(saveVehicle: ISaveVehicle) {
     return this.http.post('/api/vehicles', saveVehicle);
   }

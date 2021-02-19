@@ -1,0 +1,26 @@
+<h2>Vehicles</h2>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">id</th>
+    <th scope="col">Make</th>
+    <th scope="col">Model</th>
+    <th scope="col">Contact Name</th>
+    <th scope="col">View</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let v of vehicles">
+    <th scope="row">{{v.id}}</th>
+    <td>{{v.make.name}}</td>
+    <td>{{v.model.name}}</td>
+    <td>{{v.contact.name}}</td>
+    <td>
+      <a [routerLink]="['/vehicles', v.id]">
+        Edit
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
