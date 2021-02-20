@@ -1,7 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+
+import { faSort } from "@fortawesome/free-solid-svg-icons";
+
 import { VehicleService } from "../vehicle.service";
 import { IVehicle } from "../models/IVehicle";
 import { IMake } from "../models/IMake";
+import { createPerformWatchHost } from "@angular/compiler-cli/src/perform_watch";
+
+enum Sort {
+  non,
+  descending,
+  ascending
+}
 
 @Component({
   selector: 'app-vehicles',
@@ -14,6 +24,9 @@ export class VehiclesComponent implements OnInit {
   tableVehicles: Array<IVehicle> = [];
   makes: Array<IMake> = [];
   selectMake = 0;
+  makeSort = Sort.non;
+  faSort = faSort;
+  readonly sortLength = Object.keys(Sort).filter(x => isNaN(Number(x))).length;
 
   constructor(
     private vehicleService: VehicleService
@@ -32,7 +45,7 @@ export class VehiclesComponent implements OnInit {
   }
 
   onMakeChange() {
-    this.vehicleService.getVehicles(`makeId=${this.selectMake}`).subscribe(v => {
+    this.vehicleService.getVehicles(`makeId=${ this.selectMake }`).subscribe(v => {
       this.tableVehicles = [...v];
     });
   }
@@ -45,4 +58,35 @@ export class VehiclesComponent implements OnInit {
   //     this.filteredVehicles = _.filter(this.vehicles, v => v.make.id === this.selectMake);
   //   }
   // }
+  onClickMake() {
+    this.makeSort = this.changeSort(this.makeSort);
+    switch (this.makeSort) {
+      case Sort.descending:
+        this.vehicleService.getVehicles(`orderBy=model.make.name desc`).subscribe(v => {
+          this.tableVehicles = [...v];
+        });
+        break;
+      case Sort.ascending:
+        this.vehicleService.getVehicles(`orderBy=model.make.name`).subscribe(v => {
+          this.tableVehicles = [...v];
+        });
+        break;
+      default:
+        this.vehicleService.getVehicles().subscribe(vehicles => {
+          this.tableVehicles = [...vehicles];
+        });
+    }
+  }
+
+  onClickModel() {
+
+  }
+
+  onClickContactName() {
+
+  }
+
+  private changeSort(sort: Sort) {
+    return (sort + 1) % this.sortLength;
+  }
 }
