@@ -10,6 +10,11 @@ using Vega.Core.Domain;
 
 namespace Vega.Controllers
 {
+    public class VehiclesParameters : QueryStringParameters
+    {
+        public int MakeId { get; set; }
+    }
+
     [ApiController]
     [Route("/api/[controller]")]
     public class VehiclesController : Controller
@@ -24,18 +29,24 @@ namespace Vega.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicles([FromQuery] int makeId)
+        public async Task<IActionResult> GetVehicles([FromQuery] VehiclesParameters vehiclesParameters)
         {
-            if (makeId == 0)
+            if (vehiclesParameters.MakeId > 0)
             {
-                var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
-                var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
-
-                return Ok(result);
+                var filteredVehicles = await _unitOfWork.Vehicles.FilterWithMakeAsync(vehiclesParameters.MakeId);
+                return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(filteredVehicles));
             }
 
-            var filteredVehicles = await _unitOfWork.Vehicles.FilterWithMakeAsync(makeId);
-            return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(filteredVehicles));
+            if (!string.IsNullOrWhiteSpace(vehiclesParameters.OrderBy))
+            {
+                var orderedVehicles = await _unitOfWork.Vehicles.OrderByParameter(vehiclesParameters.OrderBy);
+                return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(orderedVehicles));
+            }
+
+            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
+            var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
