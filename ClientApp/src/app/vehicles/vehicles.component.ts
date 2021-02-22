@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { faSort } from "@fortawesome/free-solid-svg-icons";
+import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
 import { VehicleService } from "../vehicle.service";
 import { IVehicle } from "../models/IVehicle";
@@ -26,7 +26,7 @@ export class VehiclesComponent implements OnInit {
   makeOrder = Order.Non;
   modelOrder = Order.Non;
   contactNameOrder = Order.Non;
-  faSort = faSort;
+  faSort = null;
   readonly sortLength = Object.keys(Order).filter(x => isNaN(Number(x))).length;
 
   constructor(
@@ -60,18 +60,38 @@ export class VehiclesComponent implements OnInit {
   //   }
   // }
   onClickMake() {
+    this.makeOrder === Order.Non && this.resetOrders();
     this.makeOrder = this.changeOrder(this.makeOrder);
     this.sortVehicles("model.make.name", this.makeOrder);
   }
 
   onClickModel() {
+    this.modelOrder === Order.Non && this.resetOrders();
     this.modelOrder = this.changeOrder(this.modelOrder);
     this.sortVehicles("model.name", this.modelOrder);
   }
 
   onClickContactName() {
+    this.contactNameOrder === Order.Non && this.resetOrders();
     this.contactNameOrder = this.changeOrder(this.contactNameOrder);
     this.sortVehicles("contact.name", this.contactNameOrder);
+  }
+
+  setSortIcon(order = Order.Non) {
+    switch (order) {
+      case Order.Descending:
+        return faSortDown;
+      case Order.Ascending:
+        return faSortUp;
+      default:
+        return null;
+    }
+  }
+
+  private resetOrders() {
+    this.makeOrder = Order.Non;
+    this.modelOrder = Order.Non;
+    this.contactNameOrder = Order.Non;
   }
 
   private sortVehicles(orderBy = "", order = Order.Non) {

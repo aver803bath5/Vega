@@ -14,9 +14,16 @@
     </th>
     <th scope="col" (click)="onClickMake()">
       Make
+      <fa-icon *ngIf="makeOrder" [icon]="setSortIcon(makeOrder)"></fa-icon>
     </th>
-    <th scope="col" (click)="onClickModel()">Model</th>
-    <th scope="col" (click)="onClickContactName()">Contact Name</th>
+    <th scope="col" (click)="onClickModel()">
+      Model
+      <fa-icon *ngIf="modelOrder" [icon]="setSortIcon(modelOrder)"></fa-icon>
+    </th>
+    <th scope="col" (click)="onClickContactName()">
+      Contact Name
+      <fa-icon *ngIf="contactNameOrder" [icon]="setSortIcon(contactNameOrder)"></fa-icon>
+    </th>
     <th scope="col">View</th>
   </tr>
   </thead>
