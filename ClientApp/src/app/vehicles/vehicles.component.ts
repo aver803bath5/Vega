@@ -5,12 +5,11 @@ import { faSort } from "@fortawesome/free-solid-svg-icons";
 import { VehicleService } from "../vehicle.service";
 import { IVehicle } from "../models/IVehicle";
 import { IMake } from "../models/IMake";
-import { createPerformWatchHost } from "@angular/compiler-cli/src/perform_watch";
 
-enum Sort {
-  non,
-  descending,
-  ascending
+enum Order {
+  Non,
+  Descending,
+  Ascending
 }
 
 @Component({
@@ -24,9 +23,11 @@ export class VehiclesComponent implements OnInit {
   tableVehicles: Array<IVehicle> = [];
   makes: Array<IMake> = [];
   selectMake = 0;
-  makeSort = Sort.non;
+  makeOrder = Order.Non;
+  modelOrder = Order.Non;
+  contactNameOrder = Order.Non;
   faSort = faSort;
-  readonly sortLength = Object.keys(Sort).filter(x => isNaN(Number(x))).length;
+  readonly sortLength = Object.keys(Order).filter(x => isNaN(Number(x))).length;
 
   constructor(
     private vehicleService: VehicleService
@@ -59,15 +60,29 @@ export class VehiclesComponent implements OnInit {
   //   }
   // }
   onClickMake() {
-    this.makeSort = this.changeSort(this.makeSort);
-    switch (this.makeSort) {
-      case Sort.descending:
-        this.vehicleService.getVehicles(`orderBy=model.make.name desc`).subscribe(v => {
+    this.makeOrder = this.changeOrder(this.makeOrder);
+    this.sortVehicles("model.make.name", this.makeOrder);
+  }
+
+  onClickModel() {
+    this.modelOrder = this.changeOrder(this.modelOrder);
+    this.sortVehicles("model.name", this.modelOrder);
+  }
+
+  onClickContactName() {
+    this.contactNameOrder = this.changeOrder(this.contactNameOrder);
+    this.sortVehicles("contact.name", this.contactNameOrder);
+  }
+
+  private sortVehicles(orderBy = "", order = Order.Non) {
+    switch (order) {
+      case Order.Descending:
+        this.vehicleService.getVehicles(`orderBy=${ orderBy } desc`).subscribe(v => {
           this.tableVehicles = [...v];
         });
         break;
-      case Sort.ascending:
-        this.vehicleService.getVehicles(`orderBy=model.make.name`).subscribe(v => {
+      case Order.Ascending:
+        this.vehicleService.getVehicles(`orderBy=${ orderBy }`).subscribe(v => {
           this.tableVehicles = [...v];
         });
         break;
@@ -78,15 +93,7 @@ export class VehiclesComponent implements OnInit {
     }
   }
 
-  onClickModel() {
-
-  }
-
-  onClickContactName() {
-
-  }
-
-  private changeSort(sort: Sort) {
+  private changeOrder(sort: Order) {
     return (sort + 1) % this.sortLength;
   }
 }
