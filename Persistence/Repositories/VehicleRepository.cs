@@ -19,21 +19,21 @@ namespace Vega.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehiclesParameters vehiclesParameters)
+        public async Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehicleParameters vehicleParameters)
         {
             var vehicles = _context.Vehicles.AsQueryable();
             
-            if (vehiclesParameters.MakeId > 0)
-                vehicles = Find(v => v.Model.MakeId == vehiclesParameters.MakeId).AsQueryable();
+            if (vehicleParameters.MakeId > 0)
+                vehicles = Find(v => v.Model.MakeId == vehicleParameters.MakeId).AsQueryable();
 
-            ApplySort(ref vehicles, vehiclesParameters.OrderBy);
+            ApplySort(ref vehicles, vehicleParameters.OrderBy);
 
             return await PagedList<Vehicle>.ToPagedListAsync(vehicles
                     .Include(v => v.Features)
                     .ThenInclude(vf => vf.Feature)
                     .Include(v => v.Model)
                     .ThenInclude(m => m.Make).AsQueryable()
-                , vehiclesParameters.PageNumber, vehiclesParameters.PageSize);
+                , vehicleParameters.PageNumber, vehicleParameters.PageSize);
         }
 
         public async Task<Vehicle> GetVehicleWithInfoAsync(int id)

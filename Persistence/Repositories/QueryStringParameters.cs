@@ -1,4 +1,4 @@
-namespace Vega.Controllers
+namespace Vega.Persistence.Repositories
 {
     public abstract class QueryStringParameters
     {

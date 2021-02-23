@@ -7,14 +7,10 @@ using Newtonsoft.Json;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
+using Vega.Persistence.Repositories;
 
 namespace Vega.Controllers
 {
-    public class VehiclesParameters : QueryStringParameters
-    {
-        public int MakeId { get; set; }
-    }
-
     [ApiController]
     [Route("/api/[controller]")]
     public class VehiclesController : Controller
@@ -29,9 +25,9 @@ namespace Vega.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicles([FromQuery] VehiclesParameters vehiclesParameters)
+        public async Task<IActionResult> GetVehicles([FromQuery] VehicleParameters vehicleParameters)
         {
-            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync(vehiclesParameters);
+            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync(vehicleParameters);
             var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
 
             var metaData = new

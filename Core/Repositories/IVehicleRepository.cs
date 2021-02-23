@@ -8,7 +8,7 @@ namespace Vega.Core.Repositories
 {
     public interface IVehicleRepository : IRepository<Vehicle>
     {
-        Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehiclesParameters vehiclesParameters);
+        Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehicleParameters vehicleParameters);
         Task<Vehicle> GetVehicleWithInfoAsync(int id);
     }
 }
