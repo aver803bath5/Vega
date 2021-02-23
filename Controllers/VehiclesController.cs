@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
@@ -31,20 +31,20 @@ namespace Vega.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVehicles([FromQuery] VehiclesParameters vehiclesParameters)
         {
-            if (vehiclesParameters.MakeId > 0)
-            {
-                var filteredVehicles = await _unitOfWork.Vehicles.FilterWithMakeAsync(vehiclesParameters.MakeId);
-                return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(filteredVehicles));
-            }
-
-            if (!string.IsNullOrWhiteSpace(vehiclesParameters.OrderBy))
-            {
-                var orderedVehicles = await _unitOfWork.Vehicles.OrderByParameter(vehiclesParameters.OrderBy);
-                return Ok(_mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(orderedVehicles));
-            }
-
-            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
+            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync(vehiclesParameters);
             var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
+
+            var metaData = new
+            {
+                vehicles.TotalCount,
+                vehicles.PageSize,
+                vehicles.CurrentPage,
+                vehicles.TotalPage,
+                vehicles.HasNext,
+                vehicles.HasPrevious
+            };
+            
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
 
             return Ok(result);
         }

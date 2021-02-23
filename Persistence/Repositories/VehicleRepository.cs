@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using Vega.Controllers;
 using Vega.Core.Domain;
 using Vega.Core.Repositories;
 
@@ -19,14 +19,21 @@ namespace Vega.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Vehicle>> GetAllVehiclesWithInfoAsync()
+        public async Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehiclesParameters vehiclesParameters)
         {
-            return await _context.Vehicles
-                .Include(v => v.Features)
-                .ThenInclude(vf => vf.Feature)
-                .Include(v => v.Model)
-                .ThenInclude(m => m.Make)
-                .ToListAsync();
+            var vehicles = _context.Vehicles.AsQueryable();
+            
+            if (vehiclesParameters.MakeId > 0)
+                vehicles = Find(v => v.Model.MakeId == vehiclesParameters.MakeId).AsQueryable();
+
+            ApplySort(ref vehicles, vehiclesParameters.OrderBy);
+
+            return await PagedList<Vehicle>.ToPagedListAsync(vehicles
+                    .Include(v => v.Features)
+                    .ThenInclude(vf => vf.Feature)
+                    .Include(v => v.Model)
+                    .ThenInclude(m => m.Make).AsQueryable()
+                , vehiclesParameters.PageNumber, vehiclesParameters.PageSize);
         }
 
         public async Task<Vehicle> GetVehicleWithInfoAsync(int id)
@@ -37,29 +44,6 @@ namespace Vega.Persistence.Repositories
                 .Include(v => v.Model)
                 .ThenInclude(m => m.Make)
                 .SingleOrDefaultAsync(v => v.Id == id);
-        }
-
-        public async Task<IEnumerable<Vehicle>> FilterWithMakeAsync(int makeId)
-        {
-            return await _context.Vehicles.Where(v => v.Model.MakeId == makeId)
-                .Include(v => v.Model)
-                .ThenInclude(m => m.Make)
-                .Include(v => v.Features)
-                .ThenInclude(vf => vf.Feature)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Vehicle>> OrderByParameter(string orderByQueryString)
-        {
-            var vehicles = _context.Vehicles
-                .Include(v => v.Model)
-                .ThenInclude(m => m.Make)
-                .Include(v => v.Features)
-                .ThenInclude(vf => vf.Feature)
-                .AsQueryable();
-            
-            ApplySort(ref vehicles, orderByQueryString);
-            return await vehicles.ToListAsync();
         }
 
         // orderByQueryString: 'contactName,make desc'
