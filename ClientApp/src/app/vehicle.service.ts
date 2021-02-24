@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IMake } from "./models/IMake";
-import { IKeyValuePair } from "./models/IKeyValuePair";
-import { ISaveVehicle } from "./models/ISaveVehicle";
-import { IVehicle } from "./models/IVehicle";
+import { IMake } from "./shared/models/IMake";
+import { IKeyValuePair } from "./shared/models/IKeyValuePair";
+import { ISaveVehicle } from "./shared/models/ISaveVehicle";
+import { IVehicle } from "./shared/models/IVehicle";
 
 @Injectable({
   providedIn: 'root',
 })
 export class VehicleService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getMakes() {
     return this.http.get<Array<IMake>>('/api/makes');
@@ -21,11 +22,15 @@ export class VehicleService {
   }
 
   getVehicle(id: Number) {
-    return this.http.get<IVehicle>(`/api/vehicles/${id}`);
+    return this.http.get<IVehicle>(`/api/vehicles/${ id }`);
   }
 
-  getVehicles(query: string = "") {
-    return this.http.get<Array<IVehicle>>(`/api/vehicles${query ? `?${query}` : ""}`);
+  getVehicles(queryParameters) {
+    // return this.http.get(`/api/vehicles${ query ? `?${ query }` : "" }`, { observe: 'response' });
+    return this.http.get(`/api/vehicles`, {
+      observe: 'response',
+      params: queryParameters
+    });
   }
 
   create(saveVehicle: ISaveVehicle) {
@@ -33,10 +38,10 @@ export class VehicleService {
   }
 
   update(saveVehicle: ISaveVehicle) {
-    return this.http.put(`/api/vehicles/${saveVehicle.id}`, saveVehicle);
+    return this.http.put(`/api/vehicles/${ saveVehicle.id }`, saveVehicle);
   }
 
   delete(id: Number) {
-    return this.http.delete(`/api/vehicles/${id}`);
+    return this.http.delete(`/api/vehicles/${ id }`);
   }
 }

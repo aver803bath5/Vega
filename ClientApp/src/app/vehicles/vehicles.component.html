@@ -1,7 +1,7 @@
 <h2>Vehicles</h2>
 
 <label for="makeSelect"></label>
-<select class="form-control" id="makeSelect" (change)="onMakeChange()" [(ngModel)]="selectMake">
+<select class="form-control" id="makeSelect" (change)="onMakeChange()" [(ngModel)]="selectedMake">
   <option [ngValue]="0" selected>All Makes</option>
   <option [ngValue]="m.id" *ngFor="let m of makes">{{m.name}}</option>
 </select>
@@ -41,3 +41,19 @@
   </tr>
   </tbody>
 </table>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    <li [ngClass]="{'page-item': true, 'disabled': !pagination?.hasPrevious}">
+      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: (queryParameters.pageNumber - 1)}">Previous</a>
+    </li>
+    <li *ngFor="let n of pagination?.totalPage | range:1" class="page-item" routerLinkActive="active">
+      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: n}">
+        {{n}}
+      </a>
+    </li>
+    <li [ngClass]="{'page-item': true, 'disabled': !pagination?.hasNext}">
+      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: queryParameters.pageNumber + 1}">Next</a>
+    </li>
+  </ul>
+</nav>

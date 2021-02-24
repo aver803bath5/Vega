@@ -3,8 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
 import { VehicleService } from "../vehicle.service";
-import { IVehicle } from "../models/IVehicle";
-import { IMake } from "../models/IMake";
+import { IVehicle } from "../shared/models/IVehicle";
+import { IMake } from "../shared/models/IMake";
+import { forkJoin, Observable } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
+import { IPagination } from "./IPagination";
 
 enum Order {
   Non,
@@ -22,33 +25,41 @@ export class VehiclesComponent implements OnInit {
   // vehicles: Array<IVehicle> = [];
   tableVehicles: Array<IVehicle> = [];
   makes: Array<IMake> = [];
-  selectMake = 0;
+  selectedMake = 0;
   makeOrder = Order.Non;
   modelOrder = Order.Non;
   contactNameOrder = Order.Non;
   faSort = null;
-  readonly sortLength = Object.keys(Order).filter(x => isNaN(Number(x))).length;
+  pagination: IPagination = null;
+  queryParameters = {
+    pageNumber: 1,
+    makeId: 0,
+    orderBy: "",
+  }
+
+  get sortLength() {
+    return Object.keys(Order).filter(x => isNaN(Number(x))).length;
+  }
 
   constructor(
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private route: ActivatedRoute,
+    private  router: Router
   ) {
   }
 
   ngOnInit() {
-    this.vehicleService.getVehicles().subscribe(vehicles => {
-      // this.vehicles = [...vehicles];
-      this.tableVehicles = [...vehicles];
-    });
-
-    this.vehicleService.getMakes().subscribe(makes => {
-      this.makes = [...makes];
+    this.route.queryParams.subscribe(params => {
+      this.queryParameters.pageNumber = +params.pageNumber;
+      this.queryVehicles();
     });
   }
 
+
   onMakeChange() {
-    this.vehicleService.getVehicles(`makeId=${ this.selectMake }`).subscribe(v => {
-      this.tableVehicles = [...v];
-    });
+    this.queryParameters.pageNumber = 1;
+    this.queryParameters.makeId = this.selectedMake;
+    this.router.navigate(['/vehicles'], {queryParams: this.queryParameters});
   }
 
   // Client-Side filter
@@ -88,6 +99,14 @@ export class VehiclesComponent implements OnInit {
     }
   }
 
+  private queryVehicles() {
+    const source: Array<Observable<any>> = [this.vehicleService.getVehicles(this.queryParameters), this.vehicleService.getMakes()];
+    forkJoin(source).subscribe(data => {
+      this.setTableData(data[0]);
+      this.makes = [...data[1]];
+    });
+  }
+
   private resetOrders() {
     this.makeOrder = Order.Non;
     this.modelOrder = Order.Non;
@@ -97,23 +116,31 @@ export class VehiclesComponent implements OnInit {
   private sortVehicles(orderBy = "", order = Order.Non) {
     switch (order) {
       case Order.Descending:
-        this.vehicleService.getVehicles(`orderBy=${ orderBy } desc`).subscribe(v => {
-          this.tableVehicles = [...v];
+        this.queryParameters.orderBy = `${ orderBy } desc`
+        this.vehicleService.getVehicles(this.queryParameters).subscribe(res => {
+          this.tableVehicles = [...res.body as Array<IVehicle>];
         });
         break;
       case Order.Ascending:
-        this.vehicleService.getVehicles(`orderBy=${ orderBy }`).subscribe(v => {
-          this.tableVehicles = [...v];
+        this.queryParameters.orderBy = `${ orderBy }`
+        this.vehicleService.getVehicles(this.queryParameters).subscribe(res => {
+          this.tableVehicles = [...res.body as Array<IVehicle>];
         });
         break;
       default:
-        this.vehicleService.getVehicles().subscribe(vehicles => {
-          this.tableVehicles = [...vehicles];
+        this.queryParameters.orderBy = "";
+        this.vehicleService.getVehicles(this.queryParameters).subscribe(res => {
+          this.tableVehicles = [...res.body as Array<IVehicle>];
         });
     }
   }
 
   private changeOrder(sort: Order) {
     return (sort + 1) % this.sortLength;
+  }
+
+  private setTableData(res) {
+    this.tableVehicles = [...res.body as Array<IVehicle>];
+    this.pagination = JSON.parse(res.headers.get('x-pagination'));
   }
 }
