@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
@@ -39,8 +40,12 @@ namespace Vega.Controllers
                 vehicles.HasNext,
                 vehicles.HasPrevious
             };
-            
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData));
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
 
             return Ok(result);
         }
