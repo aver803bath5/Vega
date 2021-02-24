@@ -96,7 +96,6 @@ export class VehicleFormComponent implements OnInit {
 
   private populateModels() {
     const selectedMake = this.form.value.makeId;
-    console.log(selectedMake);
     this.models = selectedMake ? this.makes.find(m => m.id == selectedMake).models : [];
   }
 
