@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Vega.Controllers;
 using Vega.Core.Domain;
 using Vega.Core.Repositories;
 using Vega.Core.Repositories.Helpers;
