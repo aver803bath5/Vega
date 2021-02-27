@@ -26,7 +26,6 @@ namespace Vega.Persistence.Repositories
             if (vehicleParameters.MakeId > 0)
                 vehicles = Find(v => v.Model.MakeId == vehicleParameters.MakeId).AsQueryable();
 
-            // ApplySort(ref vehicles, vehicleParameters.OrderBy);
             var sortedVehicles = _sortHelper.ApplySort(vehicles, vehicleParameters.OrderBy);
 
             return await PagedList<Vehicle>.ToPagedListAsync(sortedVehicles
