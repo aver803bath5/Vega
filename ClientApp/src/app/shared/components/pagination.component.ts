@@ -1,23 +1,22 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IPagination } from "../models/IPagination";
+import { Component, Input, OnChanges} from "@angular/core";
 
 @Component({
   selector: 'app-pagination',
   template: `
-    <nav aria-label="Page navigation" *ngIf="pagination !== null && pagination.totalCount > pagination.pageSize">
+    <nav aria-label="Page navigation" *ngIf="pageSize < totalItems">
       <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="!pagination.hasPrevious">
-          <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: (pagination.currentPage - 1)}">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: currentPage - 1}">
             &laquo;
           </a>
         </li>
-        <li *ngFor="let n of pagination?.totalPage | range:1" class="page-item" [class.active]="pagination.currentPage == n">
+        <li *ngFor="let n of totalPage | range:1" class="page-item" [class.active]="currentPage == n">
           <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: n}">
             {{n}}
           </a>
         </li>
-        <li class="page-item" [class.disabled]="!pagination.hasNext">
-          <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: (pagination.currentPage + 1)}">
+        <li class="page-item" [class.disabled]="currentPage === totalPage">
+          <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: currentPage + 1}">
             &raquo;
           </a>
         </li>
@@ -25,7 +24,13 @@ import { IPagination } from "../models/IPagination";
     </nav>
   `
 })
-export class PaginationComponent {
-  @Input('pagination') pagination: IPagination
-  @Output('page-changed') pageChanged = new EventEmitter();
+export class PaginationComponent implements OnChanges{
+  @Input('total-items') totalItems:number = 0;
+  @Input('pageSize') pageSize:number = 10;
+  @Input('current-page') currentPage = 1;
+  totalPage = 0;
+
+  ngOnChanges(): void {
+    this.totalPage = Math.ceil(this.totalItems / this.pageSize);
+  }
 }

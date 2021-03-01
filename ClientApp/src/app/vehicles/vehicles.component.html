@@ -35,4 +35,5 @@
   </tbody>
 </table>
 
-<app-pagination [pagination]="pagination"></app-pagination>
+<app-pagination [current-page]="pagination?.currentPage" [pageSize]="pagination?.pageSize"
+                [total-items]="pagination?.totalCount"></app-pagination>
