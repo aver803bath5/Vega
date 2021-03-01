@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,14 @@ namespace Vega.Persistence.Repositories
             if (vehicleParameters.MakeId > 0)
                 vehicles = Find(v => v.Model.MakeId == vehicleParameters.MakeId).AsQueryable();
 
-            var sortedVehicles = _sortHelper.ApplySort(vehicles, vehicleParameters.OrderBy);
+            var columnsMap = new Dictionary<string, string>()
+            {
+                ["make"] = "model.make.name",
+                ["model"] = "model.name",
+                ["contactName"] = "contact.name",
+                ["id"] = "id"
+            };
+            var sortedVehicles = _sortHelper.ApplySort(vehicles, columnsMap, vehicleParameters.OrderBy);
 
             return await PagedList<Vehicle>.ToPagedListAsync(sortedVehicles
                     .Include(v => v.Features)

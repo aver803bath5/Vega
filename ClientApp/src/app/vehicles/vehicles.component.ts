@@ -40,9 +40,9 @@ export class VehiclesComponent implements OnInit {
   }
   columns: IColumn[] = [
     { title: 'Id' },
-    { title: 'Make', key: 'model.make.name', isSortable: true },
-    { title: 'Model', key: 'model.name', isSortable: true },
-    { title: 'Contact Name', key: 'contact.name', isSortable: true },
+    { title: 'Make', key: 'make', isSortable: true },
+    { title: 'Model', key: 'model', isSortable: true },
+    { title: 'Contact Name', key: 'contactName', isSortable: true },
     { title: '' },
   ]
 

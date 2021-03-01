@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
@@ -6,7 +7,7 @@ namespace Vega.Core.Repositories.Helpers
 {
     public class SortHelper<T> : ISortHelper<T>
     {
-        public IQueryable<T> ApplySort(IQueryable<T> entities, string orderByQueryString)
+        public IQueryable<T> ApplySort(IQueryable<T> entities, Dictionary<string, string> columnsMapping, string orderByQueryString)
         {
             if (!entities.Any())
                 return entities;
@@ -29,7 +30,7 @@ namespace Vega.Core.Repositories.Helpers
                 if (string.IsNullOrWhiteSpace(param))
                     continue;
 
-                var propertyFromQueryName = param.Split(' ')[0];
+                var propertyFromQueryName = columnsMapping[param.Split(' ')[0]];
                 var sortOrder = param.EndsWith("desc") ? "descending" : "ascending";
                 // var objectProperty = propertyInfos.FirstOrDefault(pi =>
                 //     pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
