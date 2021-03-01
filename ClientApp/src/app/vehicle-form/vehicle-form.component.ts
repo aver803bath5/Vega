@@ -6,10 +6,10 @@ import * as _ from "underscore";
 import { forkJoin, Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
-import { IMake } from "../models/IMake";
-import { IKeyValuePair } from "../models/IKeyValuePair";
-import { ISaveVehicle } from "../models/ISaveVehicle";
-import { IVehicle } from "../models/IVehicle";
+import { IMake } from "../shared/models/IMake";
+import { IKeyValuePair } from "../shared/models/IKeyValuePair";
+import { ISaveVehicle } from "../shared/models/ISaveVehicle";
+import { IVehicle } from "../shared/models/IVehicle";
 import { VehicleService } from "../vehicle.service";
 
 @Component({
