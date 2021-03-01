@@ -6,7 +6,7 @@ import { VehicleService } from "../vehicle.service";
 import { IVehicle } from "../shared/models/IVehicle";
 import { IMake } from "../shared/models/IMake";
 import { ActivatedRoute, Router } from "@angular/router";
-import { IPagination } from "./IPagination";
+import { IPagination } from "../shared/models/IPagination";
 
 interface IQueryParameters {
   pageNumber?: number;
@@ -57,7 +57,7 @@ export class VehiclesComponent implements OnInit {
     this.vehicleService.getMakes().subscribe(makes => this.makes = makes);
     this.route.queryParams.subscribe(params => {
       if (params.pageNumber)
-        this.queryParameters.pageNumber = +params.pageNumber;
+        this.queryParameters.pageNumber = params.pageNumber;
       this.populateVehicles();
     });
   }

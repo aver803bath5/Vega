@@ -16,6 +16,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
 import { VehiclesComponent } from './vehicles/vehicles.component';
+import { PaginationComponent } from "./shared/components/pagination.component";
 import { RangePipe } from './pipes/range.pipe';
 
 @NgModule({
@@ -27,6 +28,7 @@ import { RangePipe } from './pipes/range.pipe';
     FetchDataComponent,
     VehicleFormComponent,
     VehiclesComponent,
+    PaginationComponent,
     RangePipe
   ],
   imports: [

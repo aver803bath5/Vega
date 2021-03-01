@@ -35,18 +35,4 @@
   </tbody>
 </table>
 
-<nav aria-label="Page navigation" *ngIf="pagination !== null">
-  <ul class="pagination justify-content-center">
-    <li [ngClass]="{'page-item': true, 'disabled': !pagination.hasPrevious}">
-      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: (queryParameters.pageNumber - 1)}">Previous</a>
-    </li>
-    <li *ngFor="let n of pagination?.totalPage | range:1" class="page-item" routerLinkActive="active">
-      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: n}">
-        {{n}}
-      </a>
-    </li>
-    <li [ngClass]="{'page-item': true, 'disabled': !pagination?.hasNext}">
-      <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: queryParameters.pageNumber + 1}">Next</a>
-    </li>
-  </ul>
-</nav>
+<app-pagination [pagination]="pagination"></app-pagination>
