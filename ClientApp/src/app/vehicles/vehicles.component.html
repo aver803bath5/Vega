@@ -1,0 +1,39 @@
+<h2>Vehicles</h2>
+
+<label for="makeSelect"></label>
+<select class="form-control" id="makeSelect" (change)="onMakeChange()" [(ngModel)]="selectedMake">
+  <option [ngValue]="0" selected>All Makes</option>
+  <option [ngValue]="m.id" *ngFor="let m of makes">{{m.name}}</option>
+</select>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th *ngFor="let c of columns" scope="col">
+      <div *ngIf="c.isSortable" (click)="sortVehicles(c.key)">
+        {{c.title}}
+        <fa-icon *ngIf="this.queryParameters.orderBy.includes(c.key)" [icon]="setSortIcon()"></fa-icon>
+      </div>
+      <div *ngIf="!c.isSortable">
+        {{c.title}}
+      </div>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let v of tableVehicles">
+    <th scope="row">{{v.id}}</th>
+    <td>{{v.make.name}}</td>
+    <td>{{v.model.name}}</td>
+    <td>{{v.contact.name}}</td>
+    <td>
+      <a [routerLink]="['/vehicles', v.id]">
+        Edit
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<app-pagination [current-page]="pagination?.currentPage" [pageSize]="pagination?.pageSize"
+                [total-items]="pagination?.totalCount"></app-pagination>

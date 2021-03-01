@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Vega.Controllers;
 using Vega.Core.Domain;
+using Vega.Persistence.Repositories;
 
 namespace Vega.Core.Repositories
 {
     public interface IVehicleRepository : IRepository<Vehicle>
     {
-        Task<IEnumerable<Vehicle>> GetAllVehiclesWithInfoAsync();
+        Task<PagedList<Vehicle>> GetAllVehiclesWithInfoAsync(VehicleParameters vehicleParameters);
         Task<Vehicle> GetVehicleWithInfoAsync(int id);
     }
 }

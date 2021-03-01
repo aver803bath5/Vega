@@ -3,9 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
+using Vega.Persistence.Repositories;
 
 namespace Vega.Controllers
 {
@@ -23,10 +26,26 @@ namespace Vega.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetVehicles()
+        public async Task<IActionResult> GetVehicles([FromQuery] VehicleParameters vehicleParameters)
         {
-            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync();
+            var vehicles = await _unitOfWork.Vehicles.GetAllVehiclesWithInfoAsync(vehicleParameters);
             var result = vehicles.Select(_mapper.Map<Vehicle, VehicleResource>);
+
+            var metaData = new
+            {
+                vehicles.TotalCount,
+                vehicles.PageSize,
+                vehicles.CurrentPage,
+                vehicles.TotalPage,
+                vehicles.HasNext,
+                vehicles.HasPrevious
+            };
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
 
             return Ok(result);
         }

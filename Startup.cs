@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vega.Core;
+using Vega.Core.Domain;
+using Vega.Core.Repositories.Helpers;
 using Vega.Mapping;
 using Vega.Persistence;
 
@@ -27,6 +29,7 @@ namespace Vega
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISortHelper<Vehicle>, SortHelper<Vehicle>>();
             // Add Dbcontext
             services.AddDbContext<VegaDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
