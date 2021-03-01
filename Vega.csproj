@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\app\models" />
     <Folder Include="ClientApp\src\app\pipes" />
   </ItemGroup>
 
