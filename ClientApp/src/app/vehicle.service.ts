@@ -26,7 +26,6 @@ export class VehicleService {
   }
 
   getVehicles(queryParameters) {
-    // return this.http.get(`/api/vehicles${ query ? `?${ query }` : "" }`, { observe: 'response' });
     return this.http.get(`/api/vehicles`, {
       observe: 'response',
       params: queryParameters
