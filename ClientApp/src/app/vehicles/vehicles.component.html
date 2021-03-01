@@ -9,22 +9,15 @@
 <table class="table table-hover">
   <thead>
   <tr>
-    <th scope="col">
-      id
+    <th *ngFor="let c of columns" scope="col">
+      <div *ngIf="c.isSortable" (click)="sortVehicles(c.key)">
+        {{c.title}}
+        <fa-icon *ngIf="this.queryParameters.orderBy.includes(c.key)" [icon]="setSortIcon()"></fa-icon>
+      </div>
+      <div *ngIf="!c.isSortable">
+        {{c.title}}
+      </div>
     </th>
-    <th scope="col" (click)="onClickMake()">
-      Make
-      <fa-icon *ngIf="makeOrder" [icon]="setSortIcon(makeOrder)"></fa-icon>
-    </th>
-    <th scope="col" (click)="onClickModel()">
-      Model
-      <fa-icon *ngIf="modelOrder" [icon]="setSortIcon(modelOrder)"></fa-icon>
-    </th>
-    <th scope="col" (click)="onClickContactName()">
-      Contact Name
-      <fa-icon *ngIf="contactNameOrder" [icon]="setSortIcon(contactNameOrder)"></fa-icon>
-    </th>
-    <th scope="col">View</th>
   </tr>
   </thead>
   <tbody>
@@ -42,9 +35,9 @@
   </tbody>
 </table>
 
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" *ngIf="pagination !== null">
   <ul class="pagination justify-content-center">
-    <li [ngClass]="{'page-item': true, 'disabled': !pagination?.hasPrevious}">
+    <li [ngClass]="{'page-item': true, 'disabled': !pagination.hasPrevious}">
       <a class="page-link" [routerLink]="['/vehicles']" [queryParams]="{pageNumber: (queryParameters.pageNumber - 1)}">Previous</a>
     </li>
     <li *ngFor="let n of pagination?.totalPage | range:1" class="page-item" routerLinkActive="active">
