@@ -22,10 +22,10 @@ interface IColumn {
 
 @Component({
   selector: 'app-vehicles',
-  templateUrl: './vehicles.component.html',
-  styleUrls: ['./vehicles.component.css']
+  templateUrl: './vehicle-list.component.html',
+  styleUrls: ['./vehicle-list.component.css']
 })
-export class VehiclesComponent implements OnInit {
+export class VehicleListComponent implements OnInit {
   // vehicles is for client-side filtering
   // vehicles: Array<IVehicle> = [];
   tableVehicles: Array<IVehicle> = [];
