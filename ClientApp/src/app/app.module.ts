@@ -15,9 +15,10 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
-import { VehicleListComponent } from "./vehicles-list/vehicle-list.component";
+import { VehicleListComponent } from "./vehicle-list/vehicle-list.component";
 import { PaginationComponent } from "./shared/components/pagination.component";
 import { RangePipe } from './pipes/range.pipe';
+import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { RangePipe } from './pipes/range.pipe';
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
-    RangePipe
+    RangePipe,
+    ViewVehicleComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,6 +44,7 @@ import { RangePipe } from './pipes/range.pipe';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
+      { path: 'vehicles/view/:id', component: ViewVehicleComponent },
       { path: 'vehicles/:id', component: VehicleFormComponent },
       { path: 'vehicles', component: VehicleListComponent }
     ]),
