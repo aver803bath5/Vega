@@ -17,8 +17,8 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
 import { VehicleListComponent } from "./vehicle-list/vehicle-list.component";
 import { PaginationComponent } from "./shared/components/pagination.component";
+import {VehicleViewComponent} from "./vehicle-view/vehicle-view.component";
 import { RangePipe } from './pipes/range.pipe';
-import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
 
 @NgModule({
   declarations: [
@@ -30,8 +30,8 @@ import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
+    VehicleViewComponent,
     RangePipe,
-    ViewVehicleComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -44,7 +44,7 @@ import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/view/:id', component: ViewVehicleComponent },
+      { path: 'vehicles/view/:id', component: VehicleViewComponent },
       { path: 'vehicles/:id', component: VehicleFormComponent },
       { path: 'vehicles', component: VehicleListComponent }
     ]),
