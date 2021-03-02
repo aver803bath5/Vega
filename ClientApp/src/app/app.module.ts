@@ -15,7 +15,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
-import { VehiclesComponent } from './vehicles/vehicles.component';
+import { VehicleListComponent } from "./vehicles-list/vehicle-list.component";
 import { PaginationComponent } from "./shared/components/pagination.component";
 import { RangePipe } from './pipes/range.pipe';
 
@@ -27,7 +27,7 @@ import { RangePipe } from './pipes/range.pipe';
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
-    VehiclesComponent,
+    VehicleListComponent,
     PaginationComponent,
     RangePipe
   ],
@@ -43,7 +43,7 @@ import { RangePipe } from './pipes/range.pipe';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
       { path: 'vehicles/:id', component: VehicleFormComponent },
-      { path: 'vehicles', component: VehiclesComponent }
+      { path: 'vehicles', component: VehicleListComponent }
     ]),
     ReactiveFormsModule,
     FormsModule
