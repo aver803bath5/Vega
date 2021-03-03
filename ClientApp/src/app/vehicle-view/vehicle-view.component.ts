@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VehicleService } from "../vehicle.service";
-import { ActivatedRoute, RouterLinkActive } from "@angular/router";
-
-import * as _ from 'underscore';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-vehicle-view',
