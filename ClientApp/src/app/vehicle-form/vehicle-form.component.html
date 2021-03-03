@@ -38,7 +38,7 @@
     <label class="form-check-label" for="isNotRegistered">No</label>
   </div>
 
-  <div class="form-check form-check-inline" *ngFor="let feature of featuresFormArray.controls; let i = index">
+  <div class="form-check form-check-inline" *ngFor="let fc of featuresFormArray.controls; let i = index">
     <label class="form-check-label" for="feature{{i}}" formArrayName="features">
       <input class="form-check-input" id="feature{{i}}" type="checkbox" [formControlName]="i.toString()">
       {{features[i].name}}
