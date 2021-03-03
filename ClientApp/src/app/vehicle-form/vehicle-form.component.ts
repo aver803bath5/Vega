@@ -30,6 +30,7 @@ export class VehicleFormComponent implements OnInit {
       email: ["", [Validators.email, Validators.maxLength(255)]],
     })
   });
+  vehicle: IVehicle = null;
   makes = new Array<IMake>();
   models = new Array<IKeyValuePair>();
   features = new Array<IKeyValuePair>();
@@ -60,9 +61,10 @@ export class VehicleFormComponent implements OnInit {
       this.makes = [...data[1]];
 
       if (vehicleId) {
-        this.generateFeaturesFormArray(data[2].features);
-        this.setVehicle(data[2]);
+        this.vehicle = data[2];
+        this.setForm();
       }
+      this.populateFeatures(data[0]);
       this.populateModels();
     }, error => {
       if (error.status === 404)
@@ -70,21 +72,31 @@ export class VehicleFormComponent implements OnInit {
     });
   }
 
-  private setVehicle(v: IVehicle) {
+  private setForm() {
     this.form.patchValue({
-      id: v.id,
-      makeId: v.make.id,
-      modelId: v.model.id,
-      isRegistered: v.isRegistered,
-      contact: v.contact
+      id: this.vehicle.id,
+      makeId: this.vehicle.make.id,
+      modelId: this.vehicle.model.id,
+      isRegistered: this.vehicle.isRegistered,
+      contact: this.vehicle.contact
     });
   }
 
-  private generateFeaturesFormArray(vehicleFeatures: Array<IKeyValuePair>) {
-    const vehicleFeatureIds = _.pluck(vehicleFeatures, 'id');
-    this.features.forEach(f => {
-      this.featuresFormArray.push(new FormControl(vehicleFeatureIds.includes(f.id)));
+  private populateFeatures(features: IKeyValuePair[]) {
+    features.forEach(() => {
+      this.featuresFormArray.push(new FormControl(false));
     });
+
+    if (this.vehicle) {
+      // set features values of the form
+      const featuresValues = _.chain(features)
+        .pluck('id')
+        .map(x => _.pluck(this.vehicle.features as IKeyValuePair[], 'id').includes(x))
+        .value();
+      this.form.patchValue({
+        features: featuresValues
+      });
+    }
   }
 
   onMakeSelect() {
