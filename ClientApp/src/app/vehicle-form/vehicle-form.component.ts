@@ -123,7 +123,7 @@ export class VehicleFormComponent implements OnInit {
       });
     } else {
       this.vehicleService.create(saveVehicle).subscribe(() => {
-        this.toastr.success('Vehicle has been udpated', 'Success');
+        this.toastr.success('Vehicle has been updated', 'Success');
       });
     }
   }
