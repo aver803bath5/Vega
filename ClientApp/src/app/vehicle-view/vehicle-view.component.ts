@@ -22,7 +22,14 @@ export class VehicleViewComponent implements OnInit {
     private vehicleService: VehicleService,
     private route: ActivatedRoute
   ) {
-    const vehicleId = +route.snapshot.paramMap.get('id');
+  }
+
+  ngOnInit() {
+    this.setTableData();
+  }
+
+  private setTableData() {
+    const vehicleId = +this.route.snapshot.paramMap.get('id');
     this.vehicleService.getVehicle(vehicleId).subscribe(vehicle => {
       this.tableData = this.tableData.map(row => {
         if (row.type === 'string') {
@@ -42,8 +49,4 @@ export class VehicleViewComponent implements OnInit {
       });
     });
   }
-
-  ngOnInit() {
-  }
-
 }

@@ -22,6 +22,7 @@ import { RangePipe } from './pipes/range.pipe';
 import { TabsComponent } from "./shared/components/tabs.component";
 import { TabComponent } from "./shared/components/tab.component";
 import { CardTabsComponent } from "./shared/components/card-tabs.component";
+import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-view-basics-tab-content.component";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { CardTabsComponent } from "./shared/components/card-tabs.component";
     TabsComponent,
     TabComponent,
     CardTabsComponent,
+    VehicleViewBasicsTabContentComponent,
     RangePipe,
   ],
   imports: [
