@@ -1,38 +1,35 @@
 <h2>View Vehicle</h2>
 
 <div class="card">
-  <div class="card-header">
-    <ul class="nav nav-tabs card-header-tabs">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">Basics</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Photos</a>
-      </li>
-    </ul>
-  </div>
-  <div class="card-body">
-    <div class="card">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex" *ngFor="let v of tableData">
-          <div class="d-flex w-100" *ngIf="v.type === 'string'">
-            <div class="col-3 font-weight-bold">
-              {{v.title}}
-            </div>
-            <div class="col">
-              {{v.value}}
-            </div>
-          </div>
-          <div class="d-flex w-100" *ngIf="v.type === 'array'">
-            <div class="col-3 font-weight-bold">
-              {{v.title}}
-            </div>
-            <div *ngFor="let f of v.value" class="col">
-              {{f.name}}
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <app-card-tabs>
+    <app-tab [active]="true" tab-title="Basics">
+      <div class="card-body">
+        <div class="card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex" *ngFor="let v of tableData">
+              <div class="d-flex w-100" *ngIf="v.type === 'string'">
+                <div class="col-3 font-weight-bold">
+                  {{v.title}}
+                </div>
+                <div class="col">
+                  {{v.value}}
+                </div>
+              </div>
+              <div class="d-flex w-100" *ngIf="v.type === 'array'">
+                <div class="col-3 font-weight-bold">
+                  {{v.title}}
+                </div>
+                <div *ngFor="let f of v.value" class="col">
+                  {{f.name}}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </app-tab>
+    <app-tab tab-title="Photos">
+      photos
+    </app-tab>
+  </app-card-tabs>
 </div>

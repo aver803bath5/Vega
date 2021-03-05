@@ -17,8 +17,11 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
 import { VehicleListComponent } from "./vehicle-list/vehicle-list.component";
 import { PaginationComponent } from "./shared/components/pagination.component";
-import {VehicleViewComponent} from "./vehicle-view/vehicle-view.component";
+import { VehicleViewComponent } from "./vehicle-view/vehicle-view.component";
 import { RangePipe } from './pipes/range.pipe';
+import { TabsComponent } from "./shared/components/tabs.component";
+import { TabComponent } from "./shared/components/tab.component";
+import { CardTabsComponent } from "./shared/components/card-tabs.component";
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { RangePipe } from './pipes/range.pipe';
     VehicleListComponent,
     PaginationComponent,
     VehicleViewComponent,
+    TabsComponent,
+    TabComponent,
+    CardTabsComponent,
     RangePipe,
   ],
   imports: [
