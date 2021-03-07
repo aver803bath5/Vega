@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vega.Persistence;
 
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    partial class VegaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210307033335_PhotosTable")]
+    partial class PhotosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,12 +88,7 @@ namespace Vega.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("VehicleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VehicleId");
 
                     b.ToTable("Photos");
                 });
@@ -143,13 +140,6 @@ namespace Vega.Migrations
                         .IsRequired();
 
                     b.Navigation("Make");
-                });
-
-            modelBuilder.Entity("Vega.Core.Domain.Photo", b =>
-                {
-                    b.HasOne("Vega.Core.Domain.Vehicle", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("VehicleId");
                 });
 
             modelBuilder.Entity("Vega.Core.Domain.Vehicle", b =>
@@ -230,8 +220,6 @@ namespace Vega.Migrations
             modelBuilder.Entity("Vega.Core.Domain.Vehicle", b =>
                 {
                     b.Navigation("Features");
-
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

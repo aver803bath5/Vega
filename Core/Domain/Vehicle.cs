@@ -19,9 +19,12 @@ namespace Vega.Core.Domain
 
         public DateTime LastUpdate { get; set; }
 
+        public ICollection<Photo> Photos { get; set; }
+
         public Vehicle()
         {
             Features = new Collection<VehicleFeature>();
+            Photos = new Collection<Photo>();
         }
     }
 }
