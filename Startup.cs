@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vega.Core;
@@ -36,6 +37,10 @@ namespace Vega
                     .LogTo(Console.WriteLine, LogLevel.Information));
 
             services.AddAutoMapper(typeof(MappingProfile));
+
+            // To list physical files from a path provided by configuration.
+            var physicalProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath"));
+            services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
