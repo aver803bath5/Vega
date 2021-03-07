@@ -1,14 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Vega.Controllers.Resources;
 using Vega.Core;
 using Vega.Core.Domain;
 using Vega.Persistence.Repositories;
+using Vega.Utilities;
 
 namespace Vega.Controllers
 {
@@ -18,11 +23,16 @@ namespace Vega.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly string[] _permittedExtensions = {".jpg"};
+        private readonly string _targetFilePath;
+        private readonly long _fileSizeLimit;
 
-        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper)
+        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _targetFilePath = config.GetValue<string>("StoredFilePath");
+            _fileSizeLimit = config.GetValue<long>("FileSizeLimit");
         }
 
         [HttpGet]
@@ -45,7 +55,8 @@ namespace Vega.Controllers
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
+            Response.Headers.Add("X-Pagination",
+                JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
 
             return Ok(result);
         }
@@ -101,6 +112,34 @@ namespace Vega.Controllers
             vehicle = await _unitOfWork.Vehicles.GetVehicleWithInfoAsync(id);
             var result = _mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
+        }
+
+        [HttpPost("photos/{id}")]
+        public async Task<IActionResult> UploadPhotos(int id, List<IFormFile> files)
+        {
+            foreach (var formFile in files)
+            {
+                var formFileContent = await FileHelpers.ProcessFormFile<VehicleResource>(
+                    formFile, ModelState, _permittedExtensions, _fileSizeLimit);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var trustedFileNameForFileStorage =
+                    $"{Path.GetRandomFileName()}{Guid.NewGuid()}".GetHashCode().ToString();
+                var directory = Path.Combine(_targetFilePath, "VehiclePhotos", id.ToString());
+                var filePath = Path.Combine(directory, trustedFileNameForFileStorage);
+
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                await using var fileStream = System.IO.File.Create(filePath + Path.GetExtension(formFile.FileName));
+                await fileStream.WriteAsync(formFileContent);
+            }
+
+            return Ok(new {id, files});
         }
     }
 }
