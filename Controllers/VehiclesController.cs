@@ -117,6 +117,10 @@ namespace Vega.Controllers
         [HttpPost("photos/{id}")]
         public async Task<IActionResult> UploadPhotos(int id, List<IFormFile> files)
         {
+            var vehicle = await _unitOfWork.Vehicles.GetAsync(id);
+            if (vehicle == null)
+                return NotFound();
+
             foreach (var formFile in files)
             {
                 var formFileContent = await FileHelpers.ProcessFormFile<VehicleResource>(
@@ -130,13 +134,18 @@ namespace Vega.Controllers
                 var trustedFileNameForFileStorage =
                     $"{Path.GetRandomFileName()}{Guid.NewGuid()}".GetHashCode().ToString();
                 var directory = Path.Combine(_targetFilePath, "VehiclePhotos", id.ToString());
-                var filePath = Path.Combine(directory, trustedFileNameForFileStorage);
+                var filePath = Path.Combine(directory, trustedFileNameForFileStorage) +
+                               Path.GetExtension(formFile.FileName);
 
                 if (!Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 
-                await using var fileStream = System.IO.File.Create(filePath + Path.GetExtension(formFile.FileName));
+                await using var fileStream = System.IO.File.Create(filePath);
                 await fileStream.WriteAsync(formFileContent);
+                
+                // Write into database after the file is uploaded successfully.
+                vehicle.Photos.Add(_mapper.Map<PhotoResource, Photo>(new PhotoResource() {FilePath = filePath}));
+                await _unitOfWork.CompleteAsync();
             }
 
             return Ok(new {id, files});
