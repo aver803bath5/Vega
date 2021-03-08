@@ -25,6 +25,7 @@ namespace Vega.Persistence
         public IFeatureRepository Features { get; }
         public IMakeRepository Makes { get; }
         public IVehicleRepository Vehicles { get; }
+        public IPhotoRepository Photos { get; }
 
         public int Complete()
         {
