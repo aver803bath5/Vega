@@ -23,6 +23,7 @@ namespace Vega.Mapping
                         v.Features.Select(vf => new KeyValuePairResource() {Id = vf.FeatureId, Name = vf.Feature.Name})));
             
             // Resource to domain model
+            CreateMap<PhotoResource, Photo>();
             CreateMap<ContactResource, Contact>();
             CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
