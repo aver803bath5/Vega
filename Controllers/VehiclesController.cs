@@ -26,6 +26,7 @@ namespace Vega.Controllers
         private readonly string[] _permittedExtensions = {".jpg"};
         private readonly string _targetFilePath;
         private readonly long _fileSizeLimit;
+        private readonly string _requestPath;
 
         public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
         {
@@ -33,6 +34,7 @@ namespace Vega.Controllers
             _mapper = mapper;
             _targetFilePath = config.GetValue<string>("StoredFilePath");
             _fileSizeLimit = config.GetValue<long>("FileSizeLimit");
+            _requestPath = config.GetValue<string>("RequestFilePath");
         }
 
         [HttpGet]
@@ -133,22 +135,40 @@ namespace Vega.Controllers
 
                 var trustedFileNameForFileStorage =
                     $"{Path.GetRandomFileName()}{Guid.NewGuid()}".GetHashCode().ToString();
-                var directory = Path.Combine(_targetFilePath, "VehiclePhotos", id.ToString());
-                var filePath = Path.Combine(directory, trustedFileNameForFileStorage) +
-                               Path.GetExtension(formFile.FileName);
+                var completeTrustedFileName = $"{trustedFileNameForFileStorage}{Path.GetExtension(formFile.FileName)}";
+                var photoDirectory = Path.Combine("VehiclePhotos", id.ToString());
+                
+                var physicalStorageDirectory = Path.Combine(_targetFilePath, photoDirectory);
+                // Physical path to store the file.
+                var filePath = Path.Combine(physicalStorageDirectory, completeTrustedFileName);
+                // The path to request the file.
+                var requestFilePath = Path.Combine(_requestPath, photoDirectory, completeTrustedFileName).Replace('\\', '/');
 
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
+                if (!Directory.Exists(physicalStorageDirectory))
+                    Directory.CreateDirectory(physicalStorageDirectory);
 
                 await using var fileStream = System.IO.File.Create(filePath);
                 await fileStream.WriteAsync(formFileContent);
-                
+
                 // Write into database after the file is uploaded successfully.
-                vehicle.Photos.Add(_mapper.Map<PhotoResource, Photo>(new PhotoResource() {FilePath = filePath}));
+                var photo = new Photo
+                {
+                    FilePath = filePath,
+                    RequestPath = requestFilePath
+                };
+                vehicle.Photos.Add(photo);
                 await _unitOfWork.CompleteAsync();
             }
 
-            return Ok(new {id, files});
+            return Ok();
+        }
+
+        [HttpGet("photos/{id}")]
+        public IActionResult GetPhotos(int id)
+        {
+            var photos = _unitOfWork.Photos.Find(p => p.VehicleId == id);
+
+            return Ok(_mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos));
         }
     }
 }
