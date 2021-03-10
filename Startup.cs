@@ -38,9 +38,9 @@ namespace Vega
 
             services.AddAutoMapper(typeof(MappingProfile));
 
-            // To list physical files from a path provided by configuration.
-            var physicalProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath"));
-            services.AddSingleton<IFileProvider>(physicalProvider);
+            // // To list physical files from a path provided by configuration.
+            // var physicalProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath"));
+            // services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
@@ -66,6 +66,11 @@ namespace Vega
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath")),
+                RequestPath = Configuration.GetValue<string>("RequestFilePath")
+            });
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
