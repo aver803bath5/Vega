@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VehicleService } from "../vehicle.service";
 import { ActivatedRoute } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-vehicle-view',
@@ -17,20 +18,37 @@ export class VehicleViewComponent implements OnInit {
     { title: 'Registered', key: 'isRegistered', value: '', type: 'string' },
     { title: 'Features', key: 'features', value: [], type: 'array' },
   ];
+  photos: IPhoto[] = [];
+  vehicleId = 0;
 
   constructor(
     private vehicleService: VehicleService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {
   }
 
   ngOnInit() {
+    this.vehicleId = +this.route.snapshot.paramMap.get('id');
     this.setTableData();
+    this.getPhotos();
+  }
+
+  onFileUpload(event) {
+    const files: FileList = event.target.files;
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      if (files[i])
+        formData.append('files', files[i]);
+    }
+    this.vehicleService.uploadPhotos(this.vehicleId, formData).subscribe(x => {
+      this.toastr.success('Photo has been uploaded', 'Success');
+      this.getPhotos();
+    });
   }
 
   private setTableData() {
-    const vehicleId = +this.route.snapshot.paramMap.get('id');
-    this.vehicleService.getVehicle(vehicleId).subscribe(vehicle => {
+    this.vehicleService.getVehicle(this.vehicleId).subscribe(vehicle => {
       this.tableData = this.tableData.map(row => {
         if (row.type === 'string') {
           const value = row.key.split('.').reduce((acc, key) => {
@@ -48,5 +66,9 @@ export class VehicleViewComponent implements OnInit {
         }
       });
     });
+  }
+
+  private getPhotos() {
+    this.vehicleService.getPhotos(this.vehicleId).subscribe(photos => this.photos = [...photos]);
   }
 }
