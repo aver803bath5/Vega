@@ -51,6 +51,8 @@ export class VehicleViewComponent implements OnInit {
     this.vehicleService.getVehicle(this.vehicleId).subscribe(vehicle => {
       this.tableData = this.tableData.map(row => {
         if (row.type === 'string') {
+          // Get the property value from the object.
+          // eg: vehicle: { contact: { name: 'abc' } } so I need to get vehicle['contact]['name'] value.
           const value = row.key.split('.').reduce((acc, key) => {
             return acc[key];
           }, vehicle);
@@ -59,6 +61,8 @@ export class VehicleViewComponent implements OnInit {
             value: value
           };
         } else if (row.type === 'array') {
+          // If row type is array, I will process it in the html. because it is easier to iterate it and display the
+          // elements inside the array.
           return {
             ...row,
             value: vehicle[row.key]
