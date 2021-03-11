@@ -32,6 +32,14 @@ export class VehicleService {
     });
   }
 
+  getPhotos(vehicleId: Number) {
+    return this.http.get<Array<IPhoto>>(`/api/vehicles/photos/${vehicleId}`);
+  }
+
+  uploadPhotos(vehicleId, photos) {
+    return this.http.post(`/api/vehicles/photos/${vehicleId}`, photos);
+  }
+
   create(saveVehicle: ISaveVehicle) {
     return this.http.post('/api/vehicles', saveVehicle);
   }
