@@ -23,7 +23,7 @@ namespace Vega.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly string[] _permittedExtensions = {".jpg"};
+        private readonly string[] _permittedExtensions = {".jpg", ".jpeg", ".png", ".gif"};
         private readonly string _targetFilePath;
         private readonly long _fileSizeLimit;
         private readonly string _requestPath;
@@ -122,6 +122,9 @@ namespace Vega.Controllers
             var vehicle = await _unitOfWork.Vehicles.GetAsync(id);
             if (vehicle == null)
                 return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
 
             foreach (var formFile in files)
             {
