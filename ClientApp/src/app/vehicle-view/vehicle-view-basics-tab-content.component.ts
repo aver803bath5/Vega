@@ -30,7 +30,7 @@ import { ToastrService } from "ngx-toastr";
         </ul>
       </div>
       <div class="mt-2">
-        <a [routerLink]="['/vehicles', vehicleId]" class="btn btn-primary" role="button">Edit</a>
+        <a [routerLink]="['/vehicles', 'edit', vehicleId]" class="btn btn-primary" role="button">Edit</a>
         <button type="button" class="btn btn-danger ml-2" (click)="delete()">Delete</button>
       </div>
     </div>

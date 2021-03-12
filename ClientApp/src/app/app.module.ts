@@ -52,8 +52,8 @@ import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-vie
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/view/:id', component: VehicleViewComponent },
-      { path: 'vehicles/:id', component: VehicleFormComponent },
+      { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+      { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent }
     ]),
     ReactiveFormsModule,
