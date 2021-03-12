@@ -124,7 +124,7 @@ export class VehicleFormComponent implements OnInit {
 
     result$.subscribe(vehicle => {
       this.toastr.success('Vehicle has been saved', 'Success');
-      this.router.navigate([`/vehicles/view/${ vehicle.id }`]);
+      this.router.navigate(['/vehicles', vehicle.id]);
     });
   }
 
