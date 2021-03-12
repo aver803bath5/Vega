@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { VehicleService } from "../vehicle.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: 'app-vehicle-basics-tab-content',
+  selector: 'app-vehicle-view-basics-tab-content',
   template: `
     <div class="card-body">
       <div class="card">
