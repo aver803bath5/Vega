@@ -30,6 +30,10 @@ export class VehicleFormComponent implements OnInit {
       email: ["", [Validators.email, Validators.maxLength(255)]],
     })
   });
+  // Use vehicle property to check if the form is for updating or creating.
+  // If vehicle property is null, the form is for creating. Otherwise, is for updating.
+  // Also use this property to assign value to formGroup because the return structure object of the getVehicle service
+  // is not fit the formGroup object structure.
   vehicle: IVehicle = null;
   makes = new Array<IMake>();
   models = new Array<IKeyValuePair>();
@@ -87,7 +91,7 @@ export class VehicleFormComponent implements OnInit {
       this.featuresFormArray.push(new FormControl(false));
     });
 
-    if (this.vehicle) {
+    if (this.vehicle !== null) {
       // set features values of the form
       const featuresValues = _.chain(features)
         .pluck('id')
@@ -117,13 +121,15 @@ export class VehicleFormComponent implements OnInit {
       .filter((v: number) => v !== -1);
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
 
-    if (this.form.controls.id.value) {
+    if (this.vehicle !== null) {
       this.vehicleService.update(saveVehicle).subscribe(() => {
-        this.toastr.success('Vehicle has been created', 'Success');
+        this.toastr.success('Vehicle has been updated', 'Success');
+        this.router.navigate([`/vehicles/view/${this.vehicle.id}`])
       });
     } else {
-      this.vehicleService.create(saveVehicle).subscribe(() => {
-        this.toastr.success('Vehicle has been updated', 'Success');
+      this.vehicleService.create(saveVehicle).subscribe(vehicle => {
+        this.toastr.success('Vehicle has been created', 'Success');
+        this.router.navigate([`/vehicles/view/${vehicle.id}`])
       });
     }
   }
