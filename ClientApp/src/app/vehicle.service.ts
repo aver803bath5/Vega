@@ -45,7 +45,7 @@ export class VehicleService {
   }
 
   update(saveVehicle: ISaveVehicle) {
-    return this.http.put(`/api/vehicles/${ saveVehicle.id }`, saveVehicle);
+    return this.http.put<IVehicle>(`/api/vehicles/${ saveVehicle.id }`, saveVehicle);
   }
 
   delete(id: Number) {

@@ -120,18 +120,12 @@ export class VehicleFormComponent implements OnInit {
       .map((checked: boolean, i) => checked ? this.features[i].id : -1)
       .filter((v: number) => v !== -1);
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
+    const result$ = this.vehicle == null ? this.vehicleService.create(saveVehicle) : this.vehicleService.update(saveVehicle);
 
-    if (this.vehicle !== null) {
-      this.vehicleService.update(saveVehicle).subscribe(() => {
-        this.toastr.success('Vehicle has been updated', 'Success');
-        this.router.navigate([`/vehicles/view/${this.vehicle.id}`])
-      });
-    } else {
-      this.vehicleService.create(saveVehicle).subscribe(vehicle => {
-        this.toastr.success('Vehicle has been created', 'Success');
-        this.router.navigate([`/vehicles/view/${vehicle.id}`])
-      });
-    }
+    result$.subscribe(vehicle => {
+      this.toastr.success('Vehicle has been saved', 'Success');
+      this.router.navigate([`/vehicles/view/${ vehicle.id }`]);
+    });
   }
 
   delete() {
