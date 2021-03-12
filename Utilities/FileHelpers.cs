@@ -73,7 +73,7 @@ namespace Vega.Utilities
             {
                 var megabytesSizeLimit = sizeLimit / 1048576;
                 modelState.AddModelError(formFile.Name,
-                    $"{fieldDisplayName}({trustedFileNameForDisplay}) exceeds" + $"{megabytesSizeLimit:N1} MB.");
+                    $"{fieldDisplayName}({trustedFileNameForDisplay}) exceeds " + $"{megabytesSizeLimit:N1} MB.");
                 return Array.Empty<byte>();
             }
 
@@ -93,7 +93,7 @@ namespace Vega.Utilities
 
                 if (!IsValidFileExtensionAndSignature(formFile.FileName, memoryStream, permittedExtensions))
                 {
-                    modelState.AddModelError("File",
+                    modelState.AddModelError(formFile.Name,
                         "The file type isn't permitted or the file's " +
                         "signature doesn't match the file's extension.");
                 }
