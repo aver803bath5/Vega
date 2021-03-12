@@ -41,7 +41,7 @@ export class VehicleService {
   }
 
   create(saveVehicle: ISaveVehicle) {
-    return this.http.post('/api/vehicles', saveVehicle);
+    return this.http.post<IVehicle>('/api/vehicles', saveVehicle);
   }
 
   update(saveVehicle: ISaveVehicle) {
