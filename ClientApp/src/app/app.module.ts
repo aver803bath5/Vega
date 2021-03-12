@@ -23,6 +23,7 @@ import { TabsComponent } from "./shared/components/tabs.component";
 import { TabComponent } from "./shared/components/tab.component";
 import { CardTabsComponent } from "./shared/components/card-tabs.component";
 import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-view-basics-tab-content.component";
+import { VehicleViewPhotosTabContentComponent } from "./vehicle-view/vehicle-view-photos-tab-content.component";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-vie
     TabComponent,
     CardTabsComponent,
     VehicleViewBasicsTabContentComponent,
+    VehicleViewPhotosTabContentComponent,
     RangePipe,
   ],
   imports: [

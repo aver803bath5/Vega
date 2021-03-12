@@ -3,26 +3,10 @@
 <div class="card">
   <app-card-tabs>
     <app-tab [active]="true" tab-title="Basics">
-      <app-vehicle-basics-tab-content></app-vehicle-basics-tab-content>
+      <app-vehicle-view-basics-tab-content></app-vehicle-view-basics-tab-content>
     </app-tab>
     <app-tab tab-title="Photos">
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-        </div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="vehicleFile" aria-describedby="vehiclePhotoFileUploadInput"
-                 (change)="onFileUpload($event)">
-          <label class="custom-file-label" for="vehicleFile">Choose file</label>
-        </div>
-      </div>
-      <div class="row row-cols-1 row-cols-md-3">
-        <div *ngFor="let p of photos" class="col mb-4">
-          <div class="card">
-            <img class="img-thumbnail" [src]="p.requestPath" alt="">
-          </div>
-        </div>
-      </div>
+      <app-vehicle-view-photos-tab-content></app-vehicle-view-photos-tab-content>
     </app-tab>
   </app-card-tabs>
 </div>
