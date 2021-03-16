@@ -1,4 +1,4 @@
 interface IPhoto {
   id: number;
-  requestPath: string;
+  fileName: string;
 }

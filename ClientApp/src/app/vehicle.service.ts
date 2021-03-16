@@ -6,7 +6,7 @@ import { ISaveVehicle } from "./shared/models/ISaveVehicle";
 import { IVehicle } from "./shared/models/IVehicle";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class VehicleService {
 
@@ -30,14 +30,6 @@ export class VehicleService {
       observe: 'response',
       params: queryParameters
     });
-  }
-
-  getPhotos(vehicleId: Number) {
-    return this.http.get<Array<IPhoto>>(`/api/vehicles/photos/${vehicleId}`);
-  }
-
-  uploadPhotos(vehicleId, photos) {
-    return this.http.post(`/api/vehicles/photos/${vehicleId}`, photos);
   }
 
   create(saveVehicle: ISaveVehicle) {
