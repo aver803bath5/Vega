@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vega.Persistence;
 
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    partial class VegaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210307033434_MakeVehiclesAndPhotosOneOrNoneToMany")]
+    partial class MakeVehiclesAndPhotosOneOrNoneToMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,11 +85,10 @@ namespace Vega.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("FileName")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("VehicleId")
+                    b.Property<int?>("VehicleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -148,13 +149,9 @@ namespace Vega.Migrations
 
             modelBuilder.Entity("Vega.Core.Domain.Photo", b =>
                 {
-                    b.HasOne("Vega.Core.Domain.Vehicle", "Vehicle")
+                    b.HasOne("Vega.Core.Domain.Vehicle", null)
                         .WithMany("Photos")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Vehicle");
+                        .HasForeignKey("VehicleId");
                 });
 
             modelBuilder.Entity("Vega.Core.Domain.Vehicle", b =>

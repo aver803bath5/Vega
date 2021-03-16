@@ -15,9 +15,15 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
-import { VehicleListComponent } from "./vehicles-list/vehicle-list.component";
+import { VehicleListComponent } from "./vehicle-list/vehicle-list.component";
 import { PaginationComponent } from "./shared/components/pagination.component";
+import { VehicleViewComponent } from "./vehicle-view/vehicle-view.component";
 import { RangePipe } from './pipes/range.pipe';
+import { TabsComponent } from "./shared/components/tabs.component";
+import { TabComponent } from "./shared/components/tab.component";
+import { CardTabsComponent } from "./shared/components/card-tabs.component";
+import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-view-basics-tab-content.component";
+import { VehicleViewPhotosTabContentComponent } from "./vehicle-view/vehicle-view-photos-tab-content.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +35,13 @@ import { RangePipe } from './pipes/range.pipe';
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
-    RangePipe
+    VehicleViewComponent,
+    TabsComponent,
+    TabComponent,
+    CardTabsComponent,
+    VehicleViewBasicsTabContentComponent,
+    VehicleViewPhotosTabContentComponent,
+    RangePipe,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,7 +54,8 @@ import { RangePipe } from './pipes/range.pipe';
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/:id', component: VehicleFormComponent },
+      { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+      { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent }
     ]),
     ReactiveFormsModule,

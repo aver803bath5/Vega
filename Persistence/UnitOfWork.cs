@@ -20,11 +20,13 @@ namespace Vega.Persistence
             Features = new FeatureRepository(_context);
             Makes = new MakeRepository(_context);
             Vehicles = new VehicleRepository(_context, vehicleSortHelper);
+            Photos = new PhotoRepository(_context);
         }
 
         public IFeatureRepository Features { get; }
         public IMakeRepository Makes { get; }
         public IVehicleRepository Vehicles { get; }
+        public IPhotoRepository Photos { get; }
 
         public int Complete()
         {

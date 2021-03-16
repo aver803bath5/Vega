@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IMake } from "./shared/models/IMake";
-import { IKeyValuePair } from "./shared/models/IKeyValuePair";
-import { ISaveVehicle } from "./shared/models/ISaveVehicle";
-import { IVehicle } from "./shared/models/IVehicle";
+import { IMake } from "../shared/models/IMake";
+import { IKeyValuePair } from "../shared/models/IKeyValuePair";
+import { ISaveVehicle } from "../shared/models/ISaveVehicle";
+import { IVehicle } from "../shared/models/IVehicle";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class VehicleService {
 
@@ -33,11 +33,11 @@ export class VehicleService {
   }
 
   create(saveVehicle: ISaveVehicle) {
-    return this.http.post('/api/vehicles', saveVehicle);
+    return this.http.post<IVehicle>('/api/vehicles', saveVehicle);
   }
 
   update(saveVehicle: ISaveVehicle) {
-    return this.http.put(`/api/vehicles/${ saveVehicle.id }`, saveVehicle);
+    return this.http.put<IVehicle>(`/api/vehicles/${ saveVehicle.id }`, saveVehicle);
   }
 
   delete(id: Number) {

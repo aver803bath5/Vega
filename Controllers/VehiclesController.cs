@@ -45,7 +45,8 @@ namespace Vega.Controllers
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
+            Response.Headers.Add("X-Pagination",
+                JsonConvert.SerializeObject(metaData, Formatting.None, serializerSettings));
 
             return Ok(result);
         }

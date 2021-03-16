@@ -8,3 +8,8 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "yourStrong(!)Password"
+    volumes:
+      - db-volume:/var/opt/mssql
+volumes:
+  db-volume:
+    
