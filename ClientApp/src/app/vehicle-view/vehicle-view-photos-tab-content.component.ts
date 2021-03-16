@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { VehicleService } from "../vehicle.service";
 import { ToastrService } from "ngx-toastr";
+import { PhotoService } from "../services/photo.service.";
 
 @Component({
   selector: 'app-vehicle-view-photos-tab-content',
@@ -20,7 +20,7 @@ import { ToastrService } from "ngx-toastr";
       <div class="row row-cols-1 row-cols-md-3">
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
-            <img class="img-thumbnail" [src]="p.requestPath" alt="">
+            <img class="img-thumbnail" src="/uploads/VehiclePhotos/{{vehicleId}}/{{p.fileName}}" alt="">
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
 
   constructor(
     private toastr: ToastrService,
-    private vehicleService: VehicleService,
+    private photoService: PhotoService,
     private route: ActivatedRoute
   ) {
   }
@@ -52,7 +52,7 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
       if (files[i])
         formData.append('files', files[i]);
     }
-    this.vehicleService.uploadPhotos(this.vehicleId, formData).subscribe(() => {
+    this.photoService.uploadPhotos(this.vehicleId, formData).subscribe(() => {
       this.toastr.success('Photo has been uploaded', 'Success');
       // Reset file input value
       event.target.value = '';
@@ -64,6 +64,6 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
   }
 
   private getPhotos() {
-    this.vehicleService.getPhotos(this.vehicleId).subscribe(photos => this.photos = [...photos]);
+    this.photoService.getPhotos(this.vehicleId).subscribe(photos => this.photos = [...photos]);
   }
 }
