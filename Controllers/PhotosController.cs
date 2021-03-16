@@ -89,19 +89,5 @@ namespace Vega.Controllers
 
             return Ok(_mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos));
         }
-
-        [HttpPost("/alter/photo")]
-        public async Task<IActionResult> Alter()
-        {
-            var photos = await _unitOfWork.Photos.GetAllAsync();
-            foreach (var photo in photos)
-            {
-                photo.FileName = photo.FileName.Split('/').Last();
-            }
-
-            await _unitOfWork.CompleteAsync();
-
-            return Ok(photos);
-        }
     }
 }
