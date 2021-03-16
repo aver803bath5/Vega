@@ -3,7 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { PhotoService } from "../services/photo.service.";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
-import { finalize } from "rxjs/operators";
+import { finalize, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
 
 @Component({
   selector: 'app-vehicle-view-photos-tab-content',
@@ -19,12 +20,15 @@ import { finalize } from "rxjs/operators";
           <label class="custom-file-label" for="vehicleFile">Choose file</label>
         </div>
       </div>
-      <div class="progress" *ngIf="uploadProgress.percentage >= 0">
+      <div class="progress" *ngIf="uploadProgress.percentage > 0">
         <div class="progress-bar" role="progressbar" [style.width]="uploadProgress.percentage + '%'"
              [attr.aria-valuenow]="uploadProgress.percentage" aria-valuemin="0" aria-valuemax="100">
           {{uploadProgress.percentage}}%
         </div>
       </div>
+      <button [disabled]="uploadProgress.percentage < 0" class="btn btn-danger" type="button" (click)="cancelUpload()">
+        Cancel
+      </button>
       <div class="row row-cols-1 row-cols-md-3">
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
@@ -38,6 +42,7 @@ import { finalize } from "rxjs/operators";
 export class VehicleViewPhotosTabContentComponent implements OnInit {
   vehicleId = 0;
   photos: IPhoto[] = [];
+  cancelUpload$ = new Subject()
   uploadProgress = {
     percentage: -1
   };
@@ -65,12 +70,15 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
     }
 
     this.photoService.uploadPhotos(this.vehicleId, formData)
-      .pipe(finalize(() => {
-        // Reset upload progress
-        this.uploadProgress.percentage = -1;
-        // Reset file input value
-        event.target.value = '';
-      }))
+      .pipe(
+        takeUntil(this.cancelUpload$),
+        finalize(() => {
+          // Reset upload progress
+          this.uploadProgress.percentage = -1;
+          // Reset file input value
+          event.target.value = '';
+        })
+      )
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.uploadProgress.percentage = Math.round(event.loaded / event.total * 100);
@@ -86,5 +94,9 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
 
   private getPhotos() {
     this.photoService.getPhotos(this.vehicleId).subscribe(photos => this.photos = [...photos]);
+  }
+
+  cancelUpload() {
+    this.cancelUpload$.next('cancel');
   }
 }
