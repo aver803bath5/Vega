@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpRequest, HttpResponse } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,11 @@ export class PhotoService {
   }
 
   uploadPhotos(vehicleId, photos) {
-    return this.http.post(`/api/vehicles/${ vehicleId }/photos`, photos);
+    const req =  new HttpRequest('POST', `/api/vehicles/${ vehicleId }/photos`, photos, {
+      // Enable this so that we can track the uploading process.
+      reportProgress: true
+    });
+
+    return this.http.request(req);
   }
 }
