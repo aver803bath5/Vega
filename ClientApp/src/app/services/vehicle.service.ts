@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IMake } from "./shared/models/IMake";
-import { IKeyValuePair } from "./shared/models/IKeyValuePair";
-import { ISaveVehicle } from "./shared/models/ISaveVehicle";
-import { IVehicle } from "./shared/models/IVehicle";
+import { IMake } from "../shared/models/IMake";
+import { IKeyValuePair } from "../shared/models/IKeyValuePair";
+import { ISaveVehicle } from "../shared/models/ISaveVehicle";
+import { IVehicle } from "../shared/models/IVehicle";
 
 @Injectable({
   providedIn: 'root'

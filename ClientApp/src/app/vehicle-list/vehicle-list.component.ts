@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
-import { VehicleService } from "../vehicle.service";
+import { VehicleService } from "../services/vehicle.service";
 import { IVehicle } from "../shared/models/IVehicle";
 import { IMake } from "../shared/models/IMake";
 import { ActivatedRoute, Router } from "@angular/router";
