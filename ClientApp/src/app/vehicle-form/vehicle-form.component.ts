@@ -10,7 +10,7 @@ import { IMake } from "../shared/models/IMake";
 import { IKeyValuePair } from "../shared/models/IKeyValuePair";
 import { ISaveVehicle } from "../shared/models/ISaveVehicle";
 import { IVehicle } from "../shared/models/IVehicle";
-import { VehicleService } from "../vehicle.service";
+import { VehicleService } from "../services/vehicle.service";
 
 @Component({
   selector: 'app-vehicle-form',
