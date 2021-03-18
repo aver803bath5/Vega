@@ -5,6 +5,7 @@ import { PhotoService } from "../services/photo.service.";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { finalize, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
+import { IPhoto } from "../shared/models/IPhoto";
 
 @Component({
   selector: 'app-vehicle-view-photos-tab-content',
