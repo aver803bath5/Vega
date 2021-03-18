@@ -50,14 +50,14 @@ import { VehicleViewPhotosTabContentComponent } from "./vehicle-view/vehicle-vie
     HttpClientModule,
     FontAwesomeModule,
     RouterModule.forRoot([
-      { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/edit/:id', component: VehicleFormComponent },
-      { path: 'vehicles/:id', component: VehicleViewComponent },
-      { path: 'vehicles', component: VehicleListComponent }
-    ]),
+    { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
+    { path: 'counter', component: CounterComponent },
+    { path: 'fetch-data', component: FetchDataComponent },
+    { path: 'vehicles/new', component: VehicleFormComponent },
+    { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+    { path: 'vehicles/:id', component: VehicleViewComponent },
+    { path: 'vehicles', component: VehicleListComponent }
+], { relativeLinkResolution: 'legacy' }),
     ReactiveFormsModule,
     FormsModule
   ],
