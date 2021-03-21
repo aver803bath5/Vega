@@ -1,5 +1,8 @@
 using System;
+using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Vega.Core;
 using Vega.Core.Domain;
 using Vega.Core.Repositories.Helpers;
@@ -32,7 +36,7 @@ namespace Vega
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISortHelper<Vehicle>, SortHelper<Vehicle>>();
             // Add Dbcontext
-            services.AddDbContext<VegaDbContext>(options => 
+            services.AddDbContext<VegaDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
                     .LogTo(Console.WriteLine, LogLevel.Information));
 
@@ -44,10 +48,31 @@ namespace Vega
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+
+            // Register the Auth0 authentication service
+            string domain = $"https://{Configuration["Auth0:Domain"]}";
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                // Register the JWT Bearer authentication scheme
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = domain;
+                    options.Audience = Configuration["Auth0:Audience"];
+                    // If the access token does not have a `sub` claim, `User.Identity.Name` will be `null`. Map it to a different claim by setting the NameClaimType below.
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = ClaimTypes.NameIdentifier
+                    };
+                });
+            
+            // Add policies for the scopes.
+            services.AddAuthorization(options =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                options.AddPolicy("update:vehicles",
+                    policy => policy.Requirements.Add(new HasScopeRequirement("update:vehicles", domain)));
             });
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,8 +91,10 @@ namespace Vega
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            // Set the url to serve the vehicle photos file when we want to store those files in other folders other than wwwroot.
             app.UseStaticFiles(new StaticFileOptions
             {
+                // Set the folder to store vehicle photos files.
                 FileProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath")),
                 RequestPath = Configuration.GetValue<string>("RequestFilePath")
             });
@@ -77,6 +104,10 @@ namespace Vega
             }
 
             app.UseRouting();
+
+            // Add the Auth0 authentication and authorization middleware to the middleware pipeline
+            app.UseAuthentication();
+            app.UseAuthorization(); // This must locate between app.UseRouting and app.UseEndpoints to make middlewares function properly.
 
             app.UseEndpoints(endpoints =>
             {
