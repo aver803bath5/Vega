@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +23,6 @@ namespace Vega.Controllers
         private readonly string[] _permittedExtensions = {".jpg", ".jpeg", ".png", ".gif"};
         private readonly string _targetFilePath;
         private readonly long _fileSizeLimit;
-        private readonly string _requestPath;
 
         public PhotosController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
         {
@@ -31,11 +30,11 @@ namespace Vega.Controllers
             _mapper = mapper;
             _targetFilePath = config.GetValue<string>("StoredFilePath");
             _fileSizeLimit = config.GetValue<long>("FileSizeLimit");
-            _requestPath = config.GetValue<string>("RequestFilePath");
         }
 
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Upload(int vehicleId, List<IFormFile> files)
         {
             var vehicle = await _unitOfWork.Vehicles.GetAsync(vehicleId);
