@@ -1,0 +1,6 @@
+{
+  "domain": "[Auth0 domain address]",
+  "clientId": "[Auth0 Single-Page Application clientId]",
+  "audience": "[Auth0 API identifier]",
+  "serverUrl": "[Server URL if the  server also serve the angular app, just delete this property.]"
+}

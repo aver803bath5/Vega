@@ -236,3 +236,5 @@ _Pvt_Extensions
 
 appsettings.Development.json
 .config
+
+ClientApp/auth_config.json
