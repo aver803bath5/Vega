@@ -6,30 +6,36 @@ import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { finalize, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { IPhoto } from "../shared/models/IPhoto";
+import { AuthService } from "@auth0/auth0-angular";
 
 @Component({
   selector: 'app-vehicle-view-photos-tab-content',
   template: `
     <ng-container>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+      <!-- Container for file input and cancel upload button to hide the whole upload photos component.-->
+      <ng-container *ngIf="auth.isAuthenticated$ | async">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+          </div>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="vehicleFile" aria-describedby="vehiclePhotoFileUploadInput"
+                   (change)="onFileUpload($event)">
+            <label class="custom-file-label" for="vehicleFile">Choose file</label>
+          </div>
         </div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="vehicleFile" aria-describedby="vehiclePhotoFileUploadInput"
-                 (change)="onFileUpload($event)">
-          <label class="custom-file-label" for="vehicleFile">Choose file</label>
+        <div class="progress" *ngIf="uploadProgress.percentage > 0">
+          <div class="progress-bar" role="progressbar" [style.width]="uploadProgress.percentage + '%'"
+               [attr.aria-valuenow]="uploadProgress.percentage" aria-valuemin="0" aria-valuemax="100">
+            {{uploadProgress.percentage}}%
+          </div>
         </div>
-      </div>
-      <div class="progress" *ngIf="uploadProgress.percentage > 0">
-        <div class="progress-bar" role="progressbar" [style.width]="uploadProgress.percentage + '%'"
-             [attr.aria-valuenow]="uploadProgress.percentage" aria-valuemin="0" aria-valuemax="100">
-          {{uploadProgress.percentage}}%
-        </div>
-      </div>
-      <button [disabled]="uploadProgress.percentage < 0" class="btn btn-danger" type="button" (click)="cancelUpload()">
-        Cancel
-      </button>
+        <button [disabled]="uploadProgress.percentage < 0" class="btn btn-danger" type="button"
+                (click)="cancelUpload()">
+          Cancel
+        </button>
+      </ng-container>
+
       <div class="row row-cols-1 row-cols-md-3">
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
@@ -51,7 +57,8 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private photoService: PhotoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public auth: AuthService
   ) {
   }
 

@@ -7,6 +7,7 @@ import { IVehicle } from "../shared/models/IVehicle";
 import { IMake } from "../shared/models/IMake";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IPagination } from "../shared/models/IPagination";
+import { AuthService } from "@auth0/auth0-angular";
 
 interface IQueryParameters {
   pageNumber?: number;
@@ -49,7 +50,8 @@ export class VehicleListComponent implements OnInit {
   constructor(
     private vehicleService: VehicleService,
     private route: ActivatedRoute,
-    private  router: Router
+    private  router: Router,
+    public auth: AuthService
   ) {
   }
 

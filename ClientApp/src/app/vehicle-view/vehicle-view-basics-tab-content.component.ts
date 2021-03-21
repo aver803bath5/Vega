@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { VehicleService } from "../services/vehicle.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { AuthService } from "@auth0/auth0-angular";
 
 @Component({
   selector: 'app-vehicle-view-basics-tab-content',
@@ -29,7 +30,7 @@ import { ToastrService } from "ngx-toastr";
           </li>
         </ul>
       </div>
-      <div class="mt-2">
+      <div class="mt-2" *ngIf="auth.isAuthenticated$ | async">
         <a [routerLink]="['/vehicles', 'edit', vehicleId]" class="btn btn-primary" role="button">Edit</a>
         <button type="button" class="btn btn-danger ml-2" (click)="delete()">Delete</button>
       </div>
@@ -52,7 +53,8 @@ export class VehicleViewBasicsTabContentComponent implements OnInit{
     private vehicleService: VehicleService,
     private route: ActivatedRoute,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public auth: AuthService
   ) {
     this.vehicleId = +this.route.snapshot.paramMap.get('id');
   }
