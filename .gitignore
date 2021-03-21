@@ -233,3 +233,5 @@ _Pvt_Extensions
 # IDE
 .vscode
 .idea
+
+appsettings.Development.json
