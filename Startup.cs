@@ -13,6 +13,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Vega.Controllers;
 using Vega.Core;
 using Vega.Core.Domain;
 using Vega.Core.Repositories.Helpers;
@@ -35,16 +36,16 @@ namespace Vega
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISortHelper<Vehicle>, SortHelper<Vehicle>>();
-            // Add Dbcontext
+            // Because IPhotoService is only being used when we send request to UploadPhotos method
+            // and it is a no state object
+            // so we can just use AddTransient to add it into DI.
+            services.AddTransient<IPhotoService, PhotoService>();
+            // Add Dbcontext and log the operation into the console.
             services.AddDbContext<VegaDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
                     .LogTo(Console.WriteLine, LogLevel.Information));
 
             services.AddAutoMapper(typeof(MappingProfile));
-
-            // // To list physical files from a path provided by configuration.
-            // var physicalProvider = new PhysicalFileProvider(Configuration.GetValue<string>("StoredFilePath"));
-            // services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
@@ -66,11 +67,13 @@ namespace Vega
                     };
                 });
             
-            // Add policies for the scopes.
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("update:vehicles",
-                    policy => policy.Requirements.Add(new HasScopeRequirement("update:vehicles", domain)));
+                // Add policies for the claims.
+                options.AddPolicy(Policies.RequireAdminRole,
+                    policy => policy.RequireClaim("https://vega.com/role", Policies.RequireAdminRole));
+                // options.AddPolicy("update:vehicles",
+                //     policy => policy.Requirements.Add(new HasScopeRequirement("update:vehicles", domain)));
             });
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }

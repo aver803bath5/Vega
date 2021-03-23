@@ -24,6 +24,8 @@ namespace Vega.Persistence.Repositories
         {
             var vehicles = _context.Vehicles.AsQueryable();
 
+            // If request URI has makeId query parameter which value is greater than 1 which mean it is valid MakeId,
+            // filter the vehicles with MakeId.
             if (vehicleParameters.MakeId > 0)
                 vehicles = Find(v => v.Model.MakeId == vehicleParameters.MakeId).AsQueryable();
 
