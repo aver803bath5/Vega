@@ -28,6 +28,8 @@ import { VehicleViewBasicsTabContentComponent } from "./vehicle-view/vehicle-vie
 import { VehicleViewPhotosTabContentComponent } from "./vehicle-view/vehicle-view-photos-tab-content.component";
 import { AuthButtonComponent } from "./shared/components/auth-button.component";
 import { AuthGuard, AuthHttpInterceptor, AuthModule, HttpMethod } from "@auth0/auth0-angular";
+import { AdminComponent } from "./admin/admin.component";
+import { AdminAuthGuardService } from "./services/admin-auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { AuthGuard, AuthHttpInterceptor, AuthModule, HttpMethod } from "@auth0/a
     VehicleViewPhotosTabContentComponent,
     AuthButtonComponent,
     RangePipe,
+    AdminComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -62,6 +65,11 @@ import { AuthGuard, AuthHttpInterceptor, AuthModule, HttpMethod } from "@auth0/a
       { path: 'vehicles/edit/:id', component: VehicleFormComponent, canActivate: [AuthGuard] },
       { path: 'vehicles/:id', component: VehicleViewComponent },
       { path: 'vehicles', component: VehicleListComponent },
+      {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AdminAuthGuardService]
+      }
     ], { relativeLinkResolution: 'legacy' }),
     ReactiveFormsModule,
     FormsModule,
