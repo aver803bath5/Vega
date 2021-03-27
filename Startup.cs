@@ -40,6 +40,7 @@ namespace Vega
             // and it is a no state object
             // so we can just use AddTransient to add it into DI.
             services.AddTransient<IPhotoService, PhotoService>();
+            services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
             // Add Dbcontext and log the operation into the console.
             services.AddDbContext<VegaDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
