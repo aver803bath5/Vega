@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +66,7 @@ namespace Vega
                         NameClaimType = ClaimTypes.NameIdentifier
                     };
                 });
-            
+
             services.AddAuthorization(options =>
             {
                 // Add policies for the claims.
@@ -129,7 +128,10 @@ namespace Vega
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    // We start the angular app through the docker now so we don't use the spa.UseAngularCliServer
+                    // method to start the angular app now. We just use spa.UseProxyToSpaDevelopmentServer to send the
+                    // request to the spa app.
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
         }
