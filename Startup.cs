@@ -131,7 +131,7 @@ namespace Vega
                     // We start the angular app through the docker now so we don't use the spa.UseAngularCliServer
                     // method to start the angular app now. We just use spa.UseProxyToSpaDevelopmentServer to send the
                     // request to the spa app.
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    spa.UseProxyToSpaDevelopmentServer("http://spa:4200");
                 }
             });
         }
