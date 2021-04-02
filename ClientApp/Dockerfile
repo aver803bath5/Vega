@@ -15,4 +15,7 @@ RUN npm install -g @angular/cli@11.2.5
 COPY . /app
 
 # Start app. Use 0.0.0.0 as the ip so I can access the app outside the container localhost.
-CMD ng serve --host 0.0.0.0
+# disable the host check of the web server so I can access the app from the Kastral webserver in the api container.
+# If I don't disable the host check of the webpack dev server, I will get a `Invalid Host Header` error message if I
+# try to access the angular app through Kastral web server because I am not using localhost to visit the site.
+CMD ng serve --disable-host-check  --host 0.0.0.0
