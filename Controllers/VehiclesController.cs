@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Vega.Controllers.Resources;
@@ -19,11 +21,13 @@ namespace Vega.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly string _targetFilePath;
 
-        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper)
+        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _targetFilePath = config.GetValue<string>("StoredFilePath");
         }
 
         [HttpGet]
@@ -85,6 +89,15 @@ namespace Vega.Controllers
             var vehicle = await _unitOfWork.Vehicles.GetAsync(id);
             if (vehicle == null)
                 return NotFound();
+            
+            // Remove all photos data of the vehicle. Delete from database.
+            var photos = _unitOfWork.Photos.Find(p => p.VehicleId == id);
+            _unitOfWork.Photos.RemoveRange(photos);
+            
+            // Remove the directory and the photo files of the vehicles.
+            var photosDirectory = Path.Combine(_targetFilePath, "VehiclePhotos", id.ToString());
+            if (Directory.Exists(photosDirectory))
+                Directory.Delete(photosDirectory, true);
 
             _unitOfWork.Vehicles.Remove(vehicle);
             await _unitOfWork.CompleteAsync();
