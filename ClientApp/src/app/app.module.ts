@@ -12,9 +12,6 @@ import { environment as env } from "../environments/environment";
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from "./app.error-handler";
 import { VehicleListComponent } from "./vehicle-list/vehicle-list.component";
@@ -35,9 +32,6 @@ import { AdminAuthGuardService } from "./services/admin-auth-guard.service";
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
@@ -59,8 +53,6 @@ import { AdminAuthGuardService } from "./services/admin-auth-guard.service";
     FontAwesomeModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent, canActivate: [AuthGuard] },
       { path: 'vehicles/edit/:id', component: VehicleFormComponent, canActivate: [AuthGuard] },
       { path: 'vehicles/:id', component: VehicleViewComponent },
