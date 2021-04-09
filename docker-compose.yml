@@ -1,8 +1,49 @@
 version: "3.9"
+
+networks:
+  vega:
+    driver: bridge
+
 services:
+  spa:
+    container_name: "vegaForChallengeWeb"
+    build:
+      context: ./ClientApp
+      dockerfile: Dockerfile
+    volumes:
+      # Mount the code in the ./ClientApp directory into the container so the any change to the code can trigger the hot reload mechanism.
+      - './ClientApp:/app'
+      # Add an anonymous volume for /app/node_modules so the node_modules directory would not be overwritten by the host node_modules directory
+      # at runtime.
+      - '/app/node_modules'
+    networks:
+      - vega
+    ports:
+      - '4200:4200'
+  api:
+    container_name: "vegaForChallengeAPI"
+    build: .
+    networks:
+      - vega
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    volumes:
+      # Mount the code to the container so the changes of the codes can be detected in the container.
+      - '.:/app'
+      # Mount the local storage location of the uploading files to the container folder so I can upload the files to the
+      # folder in the container then the file will also store in the local machine. And the files are persisted in the
+      # local machine and the container.
+      - 'E:\CSharpRepos\BuildAReadWorldAppWithASP.NETCoreAndAngular\upload:/var/www/html/uploads'
+      # Use this volume to exclude the ClientApp folder so I don't accidentally put the angular app folder into the container
+      - 'client-app-volume:/app/ClientApp'
+    depends_on:
+      - db
   db:
     image: "mcr.microsoft.com/mssql/server"
     container_name: "vegaForChallengeDb"
+    networks:
+      - vega
     ports:
       - "1433:1433"
     environment:
@@ -11,5 +52,6 @@ services:
     volumes:
       - db-volume:/var/opt/mssql
 volumes:
+  client-app-volume:
   db-volume:
     

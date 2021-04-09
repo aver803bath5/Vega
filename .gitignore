@@ -233,3 +233,14 @@ _Pvt_Extensions
 # IDE
 .vscode
 .idea
+
+appsettings.Development.json
+.config
+
+ClientApp/auth_config.json
+ClientApp/src/environments/environment.prod.ts
+appsettings.Production.json
+entrypoint.production.sh
+docker-compose.prod.yml
+Dockerfile-prod
+Dockerfile-prod.dockerignore

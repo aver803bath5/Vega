@@ -26,8 +26,8 @@
     <td>{{v.make.name}}</td>
     <td>{{v.model.name}}</td>
     <td>{{v.contact.name}}</td>
-    <td>
-      <a [routerLink]="['/vehicles', v.id]">
+    <td *ngIf="auth.isAuthenticated$ | async">
+      <a [routerLink]="['/vehicles', 'edit', v.id]">
         Edit
       </a>
     </td>

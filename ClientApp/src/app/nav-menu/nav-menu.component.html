@@ -42,10 +42,16 @@
             >Vehicles</a
             >
           </li>
+          <li *ngIf="auth.isAuthenticated$ | async" class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/vehicles/new']">
+              Create Vehicle
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isAdmin">
+            <a [routerLink]="['/admin']" class="nav-link text-dark">Admin</a>
+          </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/vehicles/new']"
-            >Create Vehicle</a
-            >
+            <app-auth-button></app-auth-button>
           </li>
         </ul>
       </div>

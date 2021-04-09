@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -64,6 +65,7 @@ namespace Vega.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             var vehicle = _mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
@@ -77,6 +79,7 @@ namespace Vega.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await _unitOfWork.Vehicles.GetAsync(id);
@@ -90,6 +93,7 @@ namespace Vega.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource vehicleResource)
         {
             var vehicle = await _unitOfWork.Vehicles.GetVehicleWithInfoAsync(id);
