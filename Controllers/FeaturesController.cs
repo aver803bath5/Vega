@@ -24,6 +24,7 @@ namespace Vega.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFeatures()
         {
+            // 123
             var features = await _unitOfWork.Features.GetAllAsync();
             var result = features.Select(_mapper.Map<Feature, KeyValuePairResource>);
             return Ok(result);
