@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import * as _ from "underscore";
-import { forkJoin, Observable } from "rxjs";
+import { forkJoin, Observable, of, Subject } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
 import { IMake } from "../shared/models/IMake";
@@ -11,13 +11,14 @@ import { IKeyValuePair } from "../shared/models/IKeyValuePair";
 import { ISaveVehicle } from "../shared/models/ISaveVehicle";
 import { IVehicle } from "../shared/models/IVehicle";
 import { VehicleService } from "../services/vehicle.service";
+import { switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',
   styleUrls: ['./vehicle-form.component.css']
 })
-export class VehicleFormComponent implements OnInit {
+export class VehicleFormComponent implements OnInit, OnDestroy {
   form = new FormBuilder().group({
     id: 0,
     makeId: [0, Validators.min(1)],
@@ -38,6 +39,8 @@ export class VehicleFormComponent implements OnInit {
   makes = new Array<IMake>();
   models = new Array<IKeyValuePair>();
   features = new Array<IKeyValuePair>();
+  result$ = new Subject<ISaveVehicle>();
+  bye$ = new Subject();
 
   get featuresFormArray() {
     return this.form.controls.features as FormArray;
@@ -52,11 +55,39 @@ export class VehicleFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.generateRequestSubject();
+    this.populateForm();
+  }
+
+  private generateRequestSubject() {
+    this.result$
+      .pipe(
+        takeUntil(this.bye$),
+        // Use switchMap to prevent from sending request with same data repeatedly.
+        // Use the vehicle property to decide which state of the form is. If the property is null means this is
+        // creating state, otherwise is editing state.
+        switchMap(v => this.vehicle == null ?
+          this.vehicleService.create(v) : this.vehicleService.update(v)),
+      )
+      // If the request is response successfully then show a success toast and navigate to the vehicle info page of the
+      // vehicle currently created or edited.
+      .subscribe((vehicle) => {
+        this.toastr.success('Vehicle has been saved', 'Success');
+        this.router.navigate(['/vehicles', vehicle.id])
+      });
+  }
+
+  // Populate the data for the form including the makes data and features data
+  // and the vehicle data if there is vehicle id existing.
+  private populateForm() {
     const vehicleId = +this.route.snapshot.paramMap.get('id');
     const sources: Array<Observable<any>> = [
       this.vehicleService.getFeatures(),
       this.vehicleService.getMakes()
     ];
+
+    // If there is vehicle id which means this is edit form so it needs to get the vehicle data to fill the data to the
+    // form.
     if (vehicleId)
       sources.push(this.vehicleService.getVehicle(vehicleId));
 
@@ -71,6 +102,8 @@ export class VehicleFormComponent implements OnInit {
       this.populateFeatures(data[0]);
       this.populateModels();
     }, error => {
+      // Navigate to the home page if any requests return 404. That's means the API is broke or the given vehicle id
+      // is invalid due to can't get the vehicle data based on the vehicle id.
       if (error.status === 404)
         this.router.navigate(['/']);
     });
@@ -120,12 +153,7 @@ export class VehicleFormComponent implements OnInit {
       .map((checked: boolean, i) => checked ? this.features[i].id : -1)
       .filter((v: number) => v !== -1);
     const saveVehicle: ISaveVehicle = { ...this.form.value, features: selectedFeatureIds };
-    const result$ = this.vehicle == null ? this.vehicleService.create(saveVehicle) : this.vehicleService.update(saveVehicle);
-
-    result$.subscribe(vehicle => {
-      this.toastr.success('Vehicle has been saved', 'Success');
-      this.router.navigate(['/vehicles', vehicle.id]);
-    });
+    this.result$.next(saveVehicle);
   }
 
   delete() {
@@ -135,5 +163,9 @@ export class VehicleFormComponent implements OnInit {
         this.router.navigate(['/']);
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.bye$.next();
   }
 }
