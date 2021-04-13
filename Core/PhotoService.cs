@@ -42,5 +42,20 @@ namespace Vega.Core
 
             return photo;
         }
+
+        public async  Task<Photo> DeletePhoto(Photo photo, string targetFilePath)
+        {
+            // Remove photo file.
+            var vehicleId = photo.VehicleId;
+            var photoFilePath = Path.Combine(targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString(),
+                photo.FileName);
+            _photoStorage.DeletePhoto(photoFilePath);
+            
+            // Remove photo data from database.
+            _unitOfWork.Photos.Remove(photo);
+            await _unitOfWork.CompleteAsync();
+
+            return photo;
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace Vega.Core
     {
         // Store vehicle photo file into server machine and return the photo file name in the machine.
         Task<string> StorePhoto(string uploadsFolderPath, IFormFile file, byte[] fileContent);
+
+        void DeletePhoto(string filePath);
     }
 }

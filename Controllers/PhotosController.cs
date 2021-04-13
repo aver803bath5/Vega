@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -80,16 +79,8 @@ namespace Vega.Controllers
             var photo = await _unitOfWork.Photos.GetAsync(photoId);
             if (photo == null)
                 return NotFound();
-            
-            // Remove photo file.
-            var vehicleId = photo.VehicleId;
-            var photoFilePath = Path.Combine(_targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString(),
-                photo.FileName);
-            System.IO.File.Delete(photoFilePath);
-            
-            // Remove photo data from database.
-            _unitOfWork.Photos.Remove(photo);
-            await _unitOfWork.CompleteAsync();
+
+            await _photoService.DeletePhoto(photo, _targetFilePath);
 
             return Ok(photo);
         }
