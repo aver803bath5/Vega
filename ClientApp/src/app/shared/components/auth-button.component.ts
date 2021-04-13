@@ -12,7 +12,15 @@ import { DOCUMENT } from "@angular/common";
     </ng-container>
 
     <ng-template #loggedOut>
-      <button type="button" class="btn btn-success" (click)="auth.loginWithRedirect()">Log in</button>
+      <button type="button" class="btn btn-success" (click)="auth.loginWithRedirect()"
+              [disabled]="auth.isLoading$ | async">
+        <ng-container *ngIf="auth.isLoading$ | async; else loginText">
+          Loading...
+        </ng-container>
+        <ng-template #loginText>
+          Log in
+        </ng-template>
+      </button>
     </ng-template>
   `
 })
