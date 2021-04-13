@@ -63,7 +63,17 @@
   </div>
 
   <div>
-    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Submit</button>
-    <button type="button" class="btn btn-danger" *ngIf="this.form.value.id" (click)="delete()">Delete</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid || isLoading">
+      <ng-container *ngIf="isLoading; else submitText">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Saving...
+      </ng-container>
+      <ng-template #submitText>
+        Submit
+      </ng-template>
+    </button>
+    <button type="button" class="btn btn-danger" *ngIf="this.form.value.id" (click)="delete()" [disabled]="isLoading">
+      Delete
+    </button>
   </div>
 </form>
