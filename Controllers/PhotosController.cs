@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,8 @@ namespace Vega.Controllers
         private readonly string _targetFilePath;
         private readonly long _fileSizeLimit;
 
-        public PhotosController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config, IPhotoService photoService)
+        public PhotosController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config,
+            IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -69,6 +71,27 @@ namespace Vega.Controllers
             var photos = _unitOfWork.Photos.Find(p => p.VehicleId == vehicleId);
 
             return Ok(_mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos));
+        }
+
+        [HttpDelete("{photoId}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int photoId)
+        {
+            var photo = await _unitOfWork.Photos.GetAsync(photoId);
+            if (photo == null)
+                return NotFound();
+            
+            // Remove photo file.
+            var vehicleId = photo.VehicleId;
+            var photoFilePath = Path.Combine(_targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString(),
+                photo.FileName);
+            System.IO.File.Delete(photoFilePath);
+            
+            // Remove photo data from database.
+            _unitOfWork.Photos.Remove(photo);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(photo);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Vega.Controllers;
 using Vega.Core.Domain;
 
 namespace Vega.Core
@@ -23,7 +24,7 @@ namespace Vega.Core
         {
             // Create a folder to store vehicle folders individually. Every vehicle photos will be stored in the folder
             // named by the vehicle id to reduce the chance to be in the same folder with the file with same name.
-            var photoDirectory = Path.Combine("VehiclePhotos", vehicle.Id.ToString());
+            var photoDirectory = Path.Combine(FilePaths.VehiclePhotosDirectory, vehicle.Id.ToString());
             var physicalStoragePath = Path.Combine(targetFilePath, photoDirectory);
             if (!Directory.Exists(physicalStoragePath))
                 Directory.CreateDirectory(physicalStoragePath);
