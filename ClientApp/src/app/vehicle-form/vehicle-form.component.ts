@@ -11,7 +11,7 @@ import { IKeyValuePair } from "../shared/models/IKeyValuePair";
 import { ISaveVehicle } from "../shared/models/ISaveVehicle";
 import { IVehicle } from "../shared/models/IVehicle";
 import { VehicleService } from "../services/vehicle.service";
-import { switchMap, takeUntil } from "rxjs/operators";
+import { finalize, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-vehicle-form',
@@ -41,6 +41,7 @@ export class VehicleFormComponent implements OnInit, OnDestroy {
   features = new Array<IKeyValuePair>();
   result$ = new Subject<ISaveVehicle>();
   bye$ = new Subject();
+  isLoading = false;
 
   get featuresFormArray() {
     return this.form.controls.features as FormArray;
@@ -68,6 +69,7 @@ export class VehicleFormComponent implements OnInit, OnDestroy {
         // creating state, otherwise is editing state.
         switchMap(v => this.vehicle == null ?
           this.vehicleService.create(v) : this.vehicleService.update(v)),
+        finalize(() => this.isLoading = false)
       )
       // If the request is response successfully then show a success toast and navigate to the vehicle info page of the
       // vehicle currently created or edited.
@@ -149,6 +151,7 @@ export class VehicleFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.isLoading = true;
     const selectedFeatureIds = this.form.value.features
       .map((checked: boolean, i) => checked ? this.features[i].id : -1)
       .filter((v: number) => v !== -1);
@@ -158,7 +161,9 @@ export class VehicleFormComponent implements OnInit, OnDestroy {
 
   delete() {
     if (confirm('Are you sure?')) {
+      this.isLoading = true;
       this.vehicleService.delete(this.form.value.id).subscribe(() => {
+        this.isLoading = false;
         this.toastr.success('Vehicle has been deleted', 'Success');
         this.router.navigate(['/']);
       });
