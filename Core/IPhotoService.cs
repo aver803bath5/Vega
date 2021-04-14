@@ -13,5 +13,7 @@ namespace Vega.Core
         // This method is used to delete vehicle photos on the server machine.
         // And remove the vehicle photo data from the database table.
         Task<Photo> DeletePhoto(Photo photo, string targetFilePath);
+
+        void DeletePhotosDirectory(int vehicleId, string targetFilePath);
     }
 }

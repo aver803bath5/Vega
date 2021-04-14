@@ -9,5 +9,8 @@ namespace Vega.Core
         Task<string> StorePhoto(string uploadsFolderPath, IFormFile file, byte[] fileContent);
 
         void DeletePhoto(string filePath);
+
+        // Delete the directory storing vehicle photos and the photo files inside it.
+        void DeleteDirectory(string directory);
     }
 }

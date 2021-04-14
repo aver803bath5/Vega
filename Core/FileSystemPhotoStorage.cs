@@ -29,5 +29,11 @@ namespace Vega.Core
         {
             File.Delete(filePath);
         }
+
+        public void DeleteDirectory(string directory)
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
     }
 }

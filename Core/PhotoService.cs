@@ -57,5 +57,16 @@ namespace Vega.Core
 
             return photo;
         }
+
+        public void DeletePhotosDirectory(int vehicleId, string targetFilePath)
+        {
+            // Remove all photos data of the vehicle. Delete from database.
+            var photos = _unitOfWork.Photos.Find(p => p.VehicleId == vehicleId);
+            _unitOfWork.Photos.RemoveRange(photos);
+            
+            // Remove the directory and the photo files of the vehicles.
+            var photosDirectory = Path.Combine(targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString());
+            _photoStorage.DeleteDirectory(photosDirectory);
+        }
     }
 }
