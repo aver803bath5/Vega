@@ -23,7 +23,8 @@ namespace Vega.Controllers
         private readonly string _targetFilePath;
         private readonly long _fileSizeLimit;
 
-        public PhotosController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config, IPhotoService photoService)
+        public PhotosController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config,
+            IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -69,6 +70,19 @@ namespace Vega.Controllers
             var photos = _unitOfWork.Photos.Find(p => p.VehicleId == vehicleId);
 
             return Ok(_mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos));
+        }
+
+        [HttpDelete("{photoId}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int photoId)
+        {
+            var photo = await _unitOfWork.Photos.GetAsync(photoId);
+            if (photo == null)
+                return NotFound();
+
+            await _photoService.DeletePhoto(photo, _targetFilePath);
+
+            return Ok(_mapper.Map<Photo, PhotoResource>(photo));
         }
     }
 }

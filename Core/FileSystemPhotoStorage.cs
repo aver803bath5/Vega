@@ -24,5 +24,16 @@ namespace Vega.Core
 
             return completeTrustedFileName;
         }
+
+        public void DeletePhoto(string filePath)
+        {
+            File.Delete(filePath);
+        }
+
+        public void DeleteDirectory(string directory)
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Vega.Controllers;
 using Vega.Core.Domain;
 
 namespace Vega.Core
@@ -23,7 +24,7 @@ namespace Vega.Core
         {
             // Create a folder to store vehicle folders individually. Every vehicle photos will be stored in the folder
             // named by the vehicle id to reduce the chance to be in the same folder with the file with same name.
-            var photoDirectory = Path.Combine("VehiclePhotos", vehicle.Id.ToString());
+            var photoDirectory = Path.Combine(FilePaths.VehiclePhotosDirectory, vehicle.Id.ToString());
             var physicalStoragePath = Path.Combine(targetFilePath, photoDirectory);
             if (!Directory.Exists(physicalStoragePath))
                 Directory.CreateDirectory(physicalStoragePath);
@@ -40,6 +41,32 @@ namespace Vega.Core
             await _unitOfWork.CompleteAsync();
 
             return photo;
+        }
+
+        public async  Task<Photo> DeletePhoto(Photo photo, string targetFilePath)
+        {
+            // Remove photo file.
+            var vehicleId = photo.VehicleId;
+            var photoFilePath = Path.Combine(targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString(),
+                photo.FileName);
+            _photoStorage.DeletePhoto(photoFilePath);
+            
+            // Remove photo data from database.
+            _unitOfWork.Photos.Remove(photo);
+            await _unitOfWork.CompleteAsync();
+
+            return photo;
+        }
+
+        public void DeletePhotosDirectory(int vehicleId, string targetFilePath)
+        {
+            // Remove all photos data of the vehicle. Delete from database.
+            var photos = _unitOfWork.Photos.Find(p => p.VehicleId == vehicleId);
+            _unitOfWork.Photos.RemoveRange(photos);
+            
+            // Remove the directory and the photo files of the vehicles.
+            var photosDirectory = Path.Combine(targetFilePath, FilePaths.VehiclePhotosDirectory, vehicleId.ToString());
+            _photoStorage.DeleteDirectory(photosDirectory);
         }
     }
 }

@@ -40,6 +40,14 @@ import { AuthService } from "@auth0/auth0-angular";
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
             <img class="img-thumbnail" src="/uploads/VehiclePhotos/{{vehicleId}}/{{p.fileName}}" alt="">
+            <button class="btn btn-danger btn-block" (click)="delete(p.id)" type="button" [disabled]="isLoading">
+              <ng-container *ngIf="!isLoading; else loadingText">
+                Delete
+              </ng-container>
+              <ng-template #loadingText>
+                Deleting...
+              </ng-template>
+            </button>
           </div>
         </div>
       </div>
@@ -53,6 +61,7 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
   uploadProgress = {
     percentage: -1
   };
+  isLoading = false
 
   constructor(
     private toastr: ToastrService,
@@ -106,5 +115,21 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
 
   cancelUpload() {
     this.cancelUpload$.next('cancel');
+  }
+
+  delete(photoId) {
+    if (confirm('Do you really want to delete this photos?')) {
+      this.isLoading = true;
+      this.photoService.deletePhoto(this.vehicleId, photoId)
+        .pipe(
+          finalize(() => this.isLoading = false)
+        )
+        .subscribe(() => {
+        this.toastr.success('Photo has been deleted.', 'Success');
+        // Remove the removed photo from the photos array.
+        const removedPhotoIndex = this.photos.findIndex(p => p.id == photoId);
+        this.photos.splice(removedPhotoIndex, 1);
+      });
+    }
   }
 }

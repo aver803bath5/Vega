@@ -21,12 +21,14 @@ namespace Vega.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IPhotoService _photoService;
         private readonly string _targetFilePath;
 
-        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
+        public VehiclesController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config, IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _photoService = photoService;
             _targetFilePath = config.GetValue<string>("StoredFilePath");
         }
 
@@ -90,19 +92,12 @@ namespace Vega.Controllers
             if (vehicle == null)
                 return NotFound();
             
-            // Remove all photos data of the vehicle. Delete from database.
-            var photos = _unitOfWork.Photos.Find(p => p.VehicleId == id);
-            _unitOfWork.Photos.RemoveRange(photos);
+            _photoService.DeletePhotosDirectory(id, _targetFilePath);
             
-            // Remove the directory and the photo files of the vehicles.
-            var photosDirectory = Path.Combine(_targetFilePath, "VehiclePhotos", id.ToString());
-            if (Directory.Exists(photosDirectory))
-                Directory.Delete(photosDirectory, true);
-
             _unitOfWork.Vehicles.Remove(vehicle);
             await _unitOfWork.CompleteAsync();
 
-            return Ok(id);
+            return Ok(_mapper.Map<Vehicle, VehicleResource>(vehicle));
         }
 
         [HttpPut("{id}")]
