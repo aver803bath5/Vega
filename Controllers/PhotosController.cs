@@ -82,7 +82,7 @@ namespace Vega.Controllers
 
             await _photoService.DeletePhoto(photo, _targetFilePath);
 
-            return Ok(photo);
+            return Ok(_mapper.Map<Photo, PhotoResource>(photo));
         }
     }
 }
