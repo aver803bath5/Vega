@@ -40,7 +40,8 @@ import { AuthService } from "@auth0/auth0-angular";
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
             <img class="img-thumbnail" src="/uploads/VehiclePhotos/{{vehicleId}}/{{p.fileName}}" alt="">
-            <button class="btn btn-danger btn-block" (click)="delete(p.id)" type="button" [disabled]="isLoading">
+            <button *ngIf="auth.isAuthenticated$ | async" class="btn btn-danger btn-block" (click)="delete(p.id)"
+                    type="button" [disabled]="isLoading">
               <ng-container *ngIf="!isLoading; else loadingText">
                 Delete
               </ng-container>
@@ -125,11 +126,11 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
           finalize(() => this.isLoading = false)
         )
         .subscribe(() => {
-        this.toastr.success('Photo has been deleted.', 'Success');
-        // Remove the removed photo from the photos array.
-        const removedPhotoIndex = this.photos.findIndex(p => p.id == photoId);
-        this.photos.splice(removedPhotoIndex, 1);
-      });
+          this.toastr.success('Photo has been deleted.', 'Success');
+          // Remove the removed photo from the photos array.
+          const removedPhotoIndex = this.photos.findIndex(p => p.id == photoId);
+          this.photos.splice(removedPhotoIndex, 1);
+        });
     }
   }
 }
