@@ -22,7 +22,9 @@
   </thead>
   <tbody>
   <tr *ngFor="let v of tableVehicles">
-    <th scope="row">{{v.id}}</th>
+    <th scope="row">
+      <a [routerLink]="['/vehicles', v.id]">{{v.id}}</a>
+    </th>
     <td>{{v.make.name}}</td>
     <td>{{v.model.name}}</td>
     <td>{{v.contact.name}}</td>
