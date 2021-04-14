@@ -23,4 +23,8 @@ export class PhotoService {
 
     return this.http.request(req);
   }
+
+  deletePhoto(vehicleId, photoId) {
+    return this.http.delete(`/api/vehicles/${vehicleId}/photos/${photoId}`);
+  }
 }
