@@ -9,6 +9,7 @@ namespace Vega.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
             builder.Property(p => p.FileName).HasMaxLength(255).IsRequired();
+            builder.Property(p => p.Thumbnail).HasMaxLength(255).IsRequired();
         }
     }
 }
