@@ -36,10 +36,11 @@ import { AuthService } from "@auth0/auth0-angular";
         </button>
       </ng-container>
 
-      <div class="row row-cols-1 row-cols-md-3">
+      <div class="row row-cols-1 row-cols-md-6">
         <div *ngFor="let p of photos" class="col mb-4">
           <div class="card">
-            <img class="img-thumbnail" src="/uploads/VehiclePhotos/{{vehicleId}}/{{p.fileName}}" alt="">
+            <img class="img-thumbnail"
+                 src="{{generateImageURL(p)}}" alt="">
             <button *ngIf="auth.isAuthenticated$ | async" class="btn btn-danger btn-block" (click)="delete(p.id)"
                     type="button" [disabled]="isLoading">
               <ng-container *ngIf="!isLoading; else loadingText">
@@ -132,5 +133,12 @@ export class VehicleViewPhotosTabContentComponent implements OnInit {
           this.photos.splice(removedPhotoIndex, 1);
         });
     }
+  }
+
+  generateImageURL(photo: IPhoto) {
+    // Because thumbnail feature is added after regular image upload feature, some photos would not have thumbnail.
+    // Return original image filepath if there is no thumbnail filepath in the photo object.
+    const imageFilename = photo.thumbnail !== '' ? photo.thumbnail : photo.fileName;
+    return `/uploads/VehiclePhotos/${this.vehicleId}/${imageFilename}`;
   }
 }
