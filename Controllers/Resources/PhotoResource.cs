@@ -4,5 +4,6 @@ namespace Vega.Controllers.Resources
     {
         public int Id { get; set; }
         public string FileName { get; set; }
+        public string Thumbnail { get; set; }
     }
 }
