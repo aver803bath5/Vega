@@ -6,6 +6,8 @@ namespace Vega.Core.Domain
 
         public string FileName { get; set; }
 
+        public string Thumbnail { get; set; }
+
         public Vehicle Vehicle { get; set; }
         public int VehicleId { get; set; }
     }

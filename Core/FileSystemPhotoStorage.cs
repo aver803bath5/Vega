@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +25,22 @@ namespace Vega.Core
             await fileStream.WriteAsync(fileContent);
 
             return completeTrustedFileName;
+        }
+
+        public string StoreThumbnail(string originImageFilePath)
+        {
+            // Create vehicle photo image's thumbnail.
+            var image = Image.FromFile(originImageFilePath);
+            var thumb = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
+
+            // Add 'thumbnail' string at the end of the original image file name to differ the thumbnail filename from 
+            // original image filename.
+            var thumbnailFileName = Path.GetFileNameWithoutExtension(originImageFilePath) + "thumbnail" + ".jpeg";
+            var physicalStorageDirectory = Path.GetDirectoryName(originImageFilePath);
+            var thumbNailFilePath = Path.Combine(physicalStorageDirectory ?? string.Empty, $"{thumbnailFileName}");
+            thumb.Save(thumbNailFilePath, ImageFormat.Jpeg); // Save thumbnail image file as jpeg format.
+
+            return thumbNailFilePath;
         }
 
         public void DeletePhoto(string filePath)
